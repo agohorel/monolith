@@ -2,12 +2,16 @@ const db = require("../db/dbModel.js");
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const { generateToken } = require("../utils/tokenUtils.js");
+const {
+  validateRegisterCreds,
+  validateLoginCreds
+} = require("../middleware/validateCreds.js");
 
 router.get("/", (req, res) => {
   res.send("hello world");
 });
 
-router.post("/register", async (req, res) => {
+router.post("/register", validateRegisterCreds, async (req, res) => {
   const data = req.body;
   const hash = bcrypt.hashSync(data.password, 12);
   data.password = hash;
@@ -21,7 +25,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", validateLoginCreds, async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await db.findBy("users", { username });
