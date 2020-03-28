@@ -7,6 +7,7 @@ export const Form = styled.form`
   flex-direction: column;
   padding: 2rem;
   background-color: ${colors.darkgrey};
+  margin-bottom: 1000rem;
 `;
 
 export const Label = styled.label`
