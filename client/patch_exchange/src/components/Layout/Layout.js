@@ -1,18 +1,27 @@
 import React from "react";
 import styled from "styled-components";
+import { connect } from "react-redux";
 
-import { Sidebar } from "./Sidebar";
+import Sidebar from "./Sidebar";
 import colors from "../../styles/colors";
 import measurements from "../../styles/measurements";
 
-export const Layout = ({ children }) => {
+const Layout = ({ children, isSidebarOpen }) => {
   return (
     <Container>
       <Sidebar></Sidebar>
-      <MainContainer>{children}</MainContainer>
+      <MainContainer isSidebarOpen={isSidebarOpen}>{children}</MainContainer>
     </Container>
   );
 };
+
+const mapStateToProps = state => {
+  return {
+    isSidebarOpen: state.layout.isSidebarOpen
+  };
+};
+
+export default connect(mapStateToProps, {})(Layout);
 
 const Container = styled.div`
   min-height: 100vh;
@@ -20,5 +29,10 @@ const Container = styled.div`
 `;
 
 const MainContainer = styled.div`
-  margin-left: ${measurements.navWidth};
+  transition: ${props =>
+    props.isSidebarOpen ? ".2s ease-out margin" : ".2s .2s ease-out margin"};
+  margin-left: ${props =>
+    props.isSidebarOpen
+      ? `${measurements.sidebarWidthOpen}`
+      : `${measurements.sidebarWidthClosed}`};
 `;

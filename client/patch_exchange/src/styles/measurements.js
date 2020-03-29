@@ -1,3 +1,4 @@
 export default {
-  navWidth: "37rem"
+  sidebarWidthOpen: "37rem",
+  sidebarWidthClosed: "11rem",
 };

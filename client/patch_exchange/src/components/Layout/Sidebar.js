@@ -1,20 +1,27 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+
+import { openSidebar, closeSidebar } from "../../actions/layoutActions";
 
 import logo from "../../assets/logo.png";
 import colors from "../../styles/colors";
 import measurements from "../../styles/measurements";
 
-export const Sidebar = () => {
+const Sidebar = ({ isSidebarOpen, openSidebar, closeSidebar }) => {
   return (
-    <Drawer>
+    <Drawer
+      onMouseEnter={openSidebar}
+      onMouseLeave={closeSidebar}
+      isSidebarOpen={isSidebarOpen}
+    >
       <LogoHeader>
         <Logo src={logo}></Logo>
-        <Title>patch.exchange</Title>
+        <Title isSidebarOpen={isSidebarOpen}>patch.exchange</Title>
       </LogoHeader>
 
-      <Nav>
+      <Nav isSidebarOpen={isSidebarOpen}>
         <NavLink>patches</NavLink>
         <NavLink>feed</NavLink>
         <NavLink>inbox</NavLink>
@@ -25,8 +32,21 @@ export const Sidebar = () => {
   );
 };
 
+const mapStateToProps = state => {
+  return {
+    isSidebarOpen: state.layout.isSidebarOpen
+  };
+};
+
+export default connect(mapStateToProps, { openSidebar, closeSidebar })(Sidebar);
+
 const Drawer = styled.div`
-  width: ${measurements.navWidth};
+  transition: ${props =>
+    props.isSidebarOpen ? ".2s ease-out width" : ".2s .2s ease-out width"};
+  width: ${props =>
+    props.isSidebarOpen
+      ? `${measurements.sidebarWidthOpen}`
+      : `${measurements.sidebarWidthClosed}`};
   background-color: ${colors.darkgrey};
   display: inline-block;
   padding: 2rem;
@@ -46,17 +66,23 @@ const Logo = styled.img`
 
 const Title = styled.h1`
   font-size: 3rem;
+  transition: ${props =>
+    props.isSidebarOpen ? ".2s .2s ease-out opacity" : ".2s ease-out opacity"};
+  opacity: ${props => (props.isSidebarOpen ? 1 : 0)};
 `;
 
 const Nav = styled.nav`
   display: flex;
   flex-direction: column;
   margin-top: 4rem;
+  transition: ${props =>
+    props.isSidebarOpen ? ".2s .2s ease-out opacity" : ".2s ease-out opacity"};
+  opacity: ${props => (props.isSidebarOpen ? 1 : 0)};
 `;
 
 const NavLink = styled(Link)`
   text-decoration: none;
-  color: ${colors.nearblack};
+  color: ${colors.offwhite};
   font-size: 2.4rem;
   font-weight: bold;
 

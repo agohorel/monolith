@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import { Layout } from "./components/Layout/Layout";
+import Layout from "./components/Layout/Layout";
 import { AuthForm } from "./components/AuthForm/AuthForm";
 
 function App() {
