@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { connect } from "react-redux";
+
+import { register, login } from "../../actions/authActions";
 
 import { Form, Label, Input } from "./FormStyles";
 import { Button } from "../Button/Button";
 
-export const AuthForm = ({ type }) => {
+const AuthForm = ({ type, register, login }) => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -17,10 +19,12 @@ export const AuthForm = ({ type }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    axios
-      .post(`http://localhost:5000/api/auth/${type}`, formData)
-      .then(res => console.log(res))
-      .catch(err => console.error(err));
+
+    if (type === "register") {
+      register(formData);
+    } else if (type === "login") {
+      login(formData);
+    }
   };
 
   return (
@@ -41,3 +45,5 @@ export const AuthForm = ({ type }) => {
     </>
   );
 };
+
+export default connect(null, { register, login })(AuthForm);
