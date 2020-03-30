@@ -35,4 +35,5 @@ const MainContainer = styled.div`
     props.isSidebarOpen
       ? `${measurements.sidebarWidthOpen}`
       : `${measurements.sidebarWidthClosed}`};
+  padding: 2rem;
 `;
