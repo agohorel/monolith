@@ -30,7 +30,7 @@ const Container = styled.div`
 
 const MainContainer = styled.div`
   transition: ${props =>
-    props.isSidebarOpen ? ".2s ease-out margin" : ".2s .2s ease-out margin"};
+    props.isSidebarOpen ? ".15s ease-in margin" : ".15s .15s ease-out margin"};
   margin-left: ${props =>
     props.isSidebarOpen
       ? `${measurements.sidebarWidthOpen}`

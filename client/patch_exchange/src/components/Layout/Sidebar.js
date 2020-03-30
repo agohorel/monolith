@@ -42,14 +42,16 @@ export default connect(mapStateToProps, { openSidebar, closeSidebar })(Sidebar);
 
 const Drawer = styled.div`
   transition: ${props =>
-    props.isSidebarOpen ? ".2s ease-out width" : ".2s .2s ease-out width"};
+    props.isSidebarOpen
+      ? ".15s ease-out width, .15s ease-out padding"
+      : ".15s .15s ease-out width, .15s .15s ease-out padding"};
   width: ${props =>
     props.isSidebarOpen
       ? `${measurements.sidebarWidthOpen}`
       : `${measurements.sidebarWidthClosed}`};
   background-color: ${colors.darkgrey};
   display: inline-block;
-  padding: 2rem;
+  padding: ${props => (props.isSidebarOpen ? "2rem" : "1rem")};
   height: 100vh;
   position: fixed;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25);
@@ -67,7 +69,9 @@ const Logo = styled.img`
 const Title = styled.h1`
   font-size: 3rem;
   transition: ${props =>
-    props.isSidebarOpen ? ".2s .2s ease-out opacity" : ".2s ease-out opacity"};
+    props.isSidebarOpen
+      ? ".15s .15s ease-out opacity"
+      : ".15s ease-in opacity"};
   opacity: ${props => (props.isSidebarOpen ? 1 : 0)};
 `;
 
@@ -76,7 +80,9 @@ const Nav = styled.nav`
   flex-direction: column;
   margin-top: 4rem;
   transition: ${props =>
-    props.isSidebarOpen ? ".2s .2s ease-out opacity" : ".2s ease-out opacity"};
+    props.isSidebarOpen
+      ? ".15s .15s ease-out opacity"
+      : ".15s ease-in opacity"};
   opacity: ${props => (props.isSidebarOpen ? 1 : 0)};
 `;
 
@@ -84,10 +90,9 @@ const NavLink = styled(Link)`
   text-decoration: none;
   color: ${colors.offwhite};
   font-size: 2.4rem;
-  font-weight: bold;
 
   :hover {
     text-decoration: line-through;
-    font-weight: bolder;
+    font-weight: bold;
   }
 `;
