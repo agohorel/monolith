@@ -2,7 +2,13 @@ const db = require("../db/connections.js");
 
 async function getPatchDetails(patchName) {
   return db("patches as p")
-    .select("p.name", "p.image_url", "p.preview_url", "p.repo_url")
+    .select(
+      "p.name",
+      "p.image_url",
+      "p.preview_url",
+      "p.repo_url",
+      "p.homepage_url"
+    )
     .where({ "p.name": patchName })
     .first();
 }
@@ -12,7 +18,7 @@ async function getPatchOperatingSystems(patchName) {
   const data = await db("patches as p")
     .select("os.os_name as os")
     .join("patch_os as pos", { "pos.patch_fk": "p.id" })
-    .join("operating_systems as os", { "os.id": "pos.operating_system_fk" })
+    .join("operating_systems as os", { "os.id": "pos.os_fk" })
     .where({ "p.name": patchName });
 
   data.forEach(item => arr.push(item.os));
@@ -49,7 +55,7 @@ async function getPatchCategories(patchName) {
 async function getPatchTags(patchName) {
   const arr = [];
   const data = await db("patches as p")
-    .select("t.tag_name as tag")
+    .select("t.tag as tag")
     .join("patch_tags as pt", { "pt.patch_fk": "p.id" })
     .join("tags as t", { "t.id": "pt.tag_fk" })
     .where({ "p.name": patchName });
@@ -63,13 +69,14 @@ async function getPatchVersions(patchName) {
   const arr = [];
   const data = await db("patches as p")
     .select(
-      "v.name as version",
-      "v.file_url as fileUrl",
+      "v.version_name as version",
       "v.description",
+      "vf.*",
       "rs.release_status as releaseStatus"
     )
     .join("versions as v", { "v.patch_fk": "p.id" })
     .join("version_status as vs", { "vs.version_fk": "v.id" })
+    .join("version_files as vf", { "vf.version_fk": "v.id" })
     .join("release_statuses as rs", { "rs.id": "vs.version_fk" })
     .where({ "p.name": patchName });
 
@@ -77,8 +84,12 @@ async function getPatchVersions(patchName) {
     arr.push({
       [item.version]: {
         status: item.releaseStatus,
-        fileUrl: item.fileUrl,
-        description: item.description
+        description: item.description,
+        linuxUrl: item.linux_file_url,
+        macUrl: item.mac_file_url,
+        windowsUrl: item.windows_file_url,
+        androidUrl: item.android_file_url,
+        iosUrl: item.ios_file_url
       }
     })
   );
@@ -99,6 +110,7 @@ async function getPatch(patchName) {
     imageUrl: details.image_url,
     previewUrl: details.preview_url,
     repoUrl: details.repo_url,
+    homepageUrl: details.homepage_url,
     operatingSystems,
     platforms,
     categories,
