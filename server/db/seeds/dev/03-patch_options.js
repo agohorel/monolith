@@ -29,11 +29,11 @@ exports.seed = function(knex) {
     })
     .then(function() {
       return knex("tags").insert([
-        { tag_name: "granular" },
-        { tag_name: "shader" },
-        { tag_name: "projection mapping" },
-        { tag_name: "VR" },
-        { tag_name: "synthesis" }
+        { tag: "granular" },
+        { tag: "shader" },
+        { tag: "projection mapping" },
+        { tag: "VR" },
+        { tag: "synthesis" }
       ]);
     })
     .then(function() {

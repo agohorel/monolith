@@ -3,6 +3,8 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 const authRouter = require("../auth/auth-router.js");
+const patchRouter = require("../patches/patch-router.js");
+
 const corsOptions = {
   origin: "*",
   credentials: true
@@ -15,5 +17,6 @@ server.use(cors(corsOptions));
 server.use(helmet());
 
 server.use("/api/auth", authRouter);
+server.use("/api/patches", patchRouter);
 
 module.exports = server;

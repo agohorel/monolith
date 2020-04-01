@@ -7,10 +7,6 @@ const {
   validateLoginCreds
 } = require("../middleware/validateCreds.js");
 
-router.get("/", (req, res) => {
-  res.send("hello world");
-});
-
 router.post("/register", validateRegisterCreds, async (req, res) => {
   const data = req.body;
   const hash = bcrypt.hashSync(data.password, 12);
