@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 
 import { fetchMetadataLists } from "../../actions/patchActions";
 
+import { PatchFormSelect } from "./PatchFormSelect";
 import { Form, Label, Input, Textarea, Select, Option } from "./FormStyles";
 import { Button } from "../Button/Button";
 
-import colors from "../../styles/colors";
-
 const PatchForm = ({ metadataLists, fetchMetadataLists }) => {
-  const [selectCounts, setSelectCounts] = useState({
-    os: [1],
-    platform: [1],
-    category: [1],
-    tag: [1]
-  });
   const [formData, setFormData] = useState({
     name: "",
     image_url: "",
@@ -26,8 +17,8 @@ const PatchForm = ({ metadataLists, fetchMetadataLists }) => {
     version: "",
     file_url: "",
     description: "",
-    release_status: "",
-    os: [],
+    releaseStatuses: "",
+    operatingSystems: [],
     platforms: [],
     categories: [],
     tags: []
@@ -54,16 +45,6 @@ const PatchForm = ({ metadataLists, fetchMetadataLists }) => {
     // redux action here
   };
 
-  const addSelectGroup = e => {
-    const type = e.currentTarget.getAttribute("name");
-    setSelectCounts({
-      ...selectCounts,
-      [type]: [...selectCounts[type], selectCounts[type].length + 1]
-    });
-  };
-
-  console.log(formData);
-
   return (
     <Form onSubmit={handleSubmit}>
       <Label htmlFor="name">name</Label>
@@ -82,117 +63,41 @@ const PatchForm = ({ metadataLists, fetchMetadataLists }) => {
       <Textarea id="description" onChange={handleChange}></Textarea>
 
       <SelectContainer>
-        <SelectGroup>
-          <Label htmlFor="os">os compatibility</Label>
-          <SelectRow>
-            {selectCounts.os.map(idx => {
-              return (
-                <Select key={idx} id="os" onChange={handleChange}>
-                  {metadataLists.operatingSystems?.map(os => {
-                    return (
-                      <Option key={os.id} id={os.os_name} value={os.os_name}>
-                        {os.os_name}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              );
-            })}
-            <Icon
-              icon={faPlusCircle}
-              size="2x"
-              name="os"
-              onClick={addSelectGroup}
-            />
-          </SelectRow>
-        </SelectGroup>
+        <PatchFormSelect
+          category="operatingSystems"
+          label="os compatibility"
+          itemPropertyName="os_name"
+          handleChange={handleChange}
+          metadataLists={metadataLists}
+        ></PatchFormSelect>
 
-        <SelectGroup>
-          <Label htmlFor="platform">platform</Label>
-          <SelectRow>
-            {selectCounts.platform.map(idx => {
-              return (
-                <Select key={idx} id="platforms" onChange={handleChange}>
-                  {metadataLists.platforms?.map(platform => {
-                    return (
-                      <Option
-                        key={platform.id}
-                        id={platform.platform_name}
-                        value={platform.platform_name}
-                      >
-                        {platform.platform_name}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              );
-            })}
-            <Icon
-              icon={faPlusCircle}
-              size="2x"
-              name="platform"
-              onClick={addSelectGroup}
-            />
-          </SelectRow>
-        </SelectGroup>
+        <PatchFormSelect
+          category="platforms"
+          label="platform"
+          itemPropertyName="platform_name"
+          handleChange={handleChange}
+          metadataLists={metadataLists}
+        ></PatchFormSelect>
 
-        <SelectGroup>
-          <Label htmlFor="categories">categories</Label>
-          <SelectRow>
-            {selectCounts.category.map(idx => {
-              return (
-                <Select key={idx} id="categories" onChange={handleChange}>
-                  {metadataLists.categories?.map(category => {
-                    return (
-                      <Option
-                        key={category.id}
-                        id={category.category_name}
-                        value={category.category_name}
-                      >
-                        {category.category_name}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              );
-            })}
-            <Icon
-              icon={faPlusCircle}
-              size="2x"
-              name="category"
-              onClick={addSelectGroup}
-            />
-          </SelectRow>
-        </SelectGroup>
+        <PatchFormSelect
+          category="categories"
+          label="categories"
+          itemPropertyName="category_name"
+          handleChange={handleChange}
+          metadataLists={metadataLists}
+        ></PatchFormSelect>
 
-        <SelectGroup>
-          <Label htmlFor="tags">tags</Label>
-          <SelectRow style={{ width: "100%" }}>
-            {selectCounts.tag.map(idx => {
-              return (
-                <Select key={idx} id="tags" onChange={handleChange}>
-                  {metadataLists.tags?.map(tag => {
-                    return (
-                      <Option key={tag.id} id={tag.tag} value={tag.tag}>
-                        {tag.tag}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              );
-            })}
-            <Icon
-              icon={faPlusCircle}
-              size="2x"
-              name="tag"
-              onClick={addSelectGroup}
-            />
-          </SelectRow>
-        </SelectGroup>
+        <PatchFormSelect
+          category="tags"
+          label="tags"
+          itemPropertyName="tag"
+          handleChange={handleChange}
+          metadataLists={metadataLists}
+        ></PatchFormSelect>
 
-        <Label htmlFor="release_status">release status</Label>
+        <Label htmlFor="releaseStatuses">release status</Label>
         <SelectRow style={{ marginBottom: "2rem" }}>
-          <Select id="release_status" onChange={handleChange}>
+          <Select id="releaseStatuses" onChange={handleChange}>
             {metadataLists.releaseStatuses?.map(releaseStatus => {
               return (
                 <Option
@@ -227,15 +132,6 @@ const SelectContainer = styled.div`
   align-items: center;
 `;
 
-const SelectGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  justify-content: center;
-  margin-bottom: 2rem;
-  width: calc(50% - 2rem);
-`;
-
 const SelectRow = styled.div`
   display: flex;
   align-items: center;
@@ -244,13 +140,4 @@ const SelectRow = styled.div`
   select {
     width: 100%;
   }
-`;
-
-const Icon = styled(FontAwesomeIcon)`
-  color: ${colors.offwhite};
-  :hover {
-    cursor: pointer;
-    color: ${colors.nearblack};
-  }
-  margin-left: 1rem;
 `;
