@@ -69,12 +69,14 @@ router.get("/metadata-lists", async (req, res) => {
       "release_statuses as rs",
       "rs.release_status"
     );
+    const tags = await db.listPatchMetadata("tags as t", "t.tag");
 
     res.status(200).json({
       operatingSystems,
       platforms,
       categories,
-      releaseStatuses
+      releaseStatuses,
+      tags
     });
   } catch (error) {
     res.status(500).json({ err: error });
