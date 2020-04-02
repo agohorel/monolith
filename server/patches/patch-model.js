@@ -119,37 +119,48 @@ async function getPatch(patchName) {
   };
 }
 
-async function createPatch(patch) {
-  try {
-    await db.transaction(async trx => {
-      const id = await knex("patches")
-        .insert({
-          name: patch.name,
-          image_url: patch.image_url,
-          preview_url: patch.preview_url,
-          repo_url: patch.repo_url
-        })
-        .returning("id")
-        .transacting(trx);
+// async function createPatch(patch) {
+//   try {
+//     await db.transaction(async trx => {
+//       const id = await knex("patches")
+//         .insert({
+//           name: patch.name,
+//           image_url: patch.image_url,
+//           preview_url: patch.preview_url,
+//           repo_url: patch.repo_url
+//         })
+//         .returning("id")
+//         .transacting(trx);
 
-      const versionID = await knex("versions")
-        .insert({
-          patch_fk: id,
-          name: patch.version,
-          file_url: patch.version_url,
-          description: patch.version_description
-        })
-        .returning("id")
-        .transacting(trx);
+//       const versionID = await knex("versions")
+//         .insert({
+//           patch_fk: id,
+//           name: patch.version,
+//           file_url: patch.version_url,
+//           description: patch.version_description
+//         })
+//         .returning("id")
+//         .transacting(trx);
 
-      await knex("version_status").insert({
-        version_fk: versionID,
-        status_fk: gotta_get_this_somehow
-      });
-    });
-  } catch (error) {
-    console.error(error);
-  }
+//       await knex("version_status").insert({
+//         version_fk: versionID,
+//         status_fk: gotta_get_this_somehow
+//       });
+//     });
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
+
+async function listPatchMetadata(table, selection) {
+  const columnName = selection.substring(
+    selection.indexOf(".") + 1,
+    selection.length
+  );
+
+  const data = await db(table).select(selection);
+
+  return data.map(item => item[columnName]);
 }
 
 module.exports = {
@@ -159,5 +170,6 @@ module.exports = {
   getPatchPlatforms,
   getPatchCategories,
   getPatchTags,
-  getPatchVersions
+  getPatchVersions,
+  listPatchMetadata
 };
