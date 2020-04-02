@@ -152,15 +152,8 @@ async function getPatch(patchName) {
 //   }
 // }
 
-async function listPatchMetadata(table, selection) {
-  const columnName = selection.substring(
-    selection.indexOf(".") + 1,
-    selection.length
-  );
-
-  const data = await db(table).select(selection);
-
-  return data.map(item => item[columnName]);
+async function listPatchMetadata(table, ...selection) {
+  return await db(table).select(...selection);
 }
 
 module.exports = {

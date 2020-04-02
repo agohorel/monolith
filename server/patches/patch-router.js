@@ -55,21 +55,26 @@ router.get("/metadata-lists", async (req, res) => {
   try {
     const operatingSystems = await db.listPatchMetadata(
       "operating_systems as os",
-      "os.os_name"
+      "os.os_name",
+      "os.id"
     );
+
     const platforms = await db.listPatchMetadata(
       "platforms as p",
-      "p.platform_name"
+      "p.platform_name",
+      "p.id"
     );
     const categories = await db.listPatchMetadata(
       "categories as c",
-      "c.category_name"
+      "c.category_name",
+      "c.id"
     );
     const releaseStatuses = await db.listPatchMetadata(
       "release_statuses as rs",
-      "rs.release_status"
+      "rs.release_status",
+      "rs.id"
     );
-    const tags = await db.listPatchMetadata("tags as t", "t.tag");
+    const tags = await db.listPatchMetadata("tags as t", "t.tag", "t.id");
 
     res.status(200).json({
       operatingSystems,
