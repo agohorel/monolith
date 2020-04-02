@@ -2,7 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Layout from "./components/Layout/Layout";
-import AuthForm from "./components/AuthForm/AuthForm";
+import AuthForm from "./components/Forms/AuthForm";
+import AddPatch from "./pages/AddPatch";
 
 function App() {
   return (
@@ -13,6 +14,9 @@ function App() {
         </Route>
         <Route path="/login">
           <AuthForm type="login"></AuthForm>
+        </Route>
+        <Route path="/add-patch">
+          <AddPatch></AddPatch>
         </Route>
       </Layout>
     </Router>
