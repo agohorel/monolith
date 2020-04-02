@@ -40,7 +40,6 @@ export const Select = styled.select`
   color: ${colors.lightgrey};
   border: none;
   padding: 0.5rem;
-  margin-bottom: 2rem;
 `;
 
 export const Option = styled.option`
