@@ -29,6 +29,8 @@ router.post("/login", validateLoginCreds, async (req, res) => {
     if (user && bcrypt.compareSync(password, user.password)) {
       const token = generateToken(user);
       res.status(201).json({ username: user.username, id: user.id, token });
+    } else {
+      res.status(400).json({ err: "Invalid credentials" });
     }
   } catch (error) {
     console.error(err);
