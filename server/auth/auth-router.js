@@ -30,7 +30,7 @@ router.post("/login", validateLoginCreds, async (req, res) => {
       const token = generateToken(user);
       res.status(201).json({ username: user.username, id: user.id, token });
     } else {
-      res.status(400).json({ err: "Invalid credentials" });
+      res.status(401).json({ err: "Invalid credentials" });
     }
   } catch (error) {
     console.error(err);
