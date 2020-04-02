@@ -28,13 +28,15 @@ export const authReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        user: payload
+        user: payload,
+        errors: null
       };
     case REGISTER_FAILURE:
     case LOGIN_FAILURE:
       return {
         ...state,
         loading: false,
+        user: null,
         errors: payload
       };
     default:

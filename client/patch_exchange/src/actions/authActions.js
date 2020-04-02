@@ -34,6 +34,6 @@ export const login = creds => async dispatch => {
     dispatch({ type: LOGIN_SUCCESS, payload: res.data });
   } catch (error) {
     console.error(error);
-    dispatch({ type: LOGIN_FAILURE, payload: error });
+    dispatch({ type: LOGIN_FAILURE, payload: "Invalid credentials" });
   }
 };
