@@ -14,10 +14,11 @@ const PatchForm = ({ metadataLists, fetchMetadataLists }) => {
     image_url: "",
     preview_url: "",
     repo_url: "",
+    homepage_url: "",
     version: "",
     file_url: "",
     description: "",
-    releaseStatuses: "",
+    releaseStatuses: [],
     operatingSystems: [],
     platforms: [],
     categories: [],
@@ -35,7 +36,10 @@ const PatchForm = ({ metadataLists, fetchMetadataLists }) => {
       // update array fields
       setFormData({
         ...formData,
-        [e.target.id]: [...formData[e.target.id], e.target.value]
+        [e.target.id]: [
+          ...formData[e.target.id],
+          e.target.selectedOptions[0].id
+        ]
       });
     }
   };
@@ -55,6 +59,8 @@ const PatchForm = ({ metadataLists, fetchMetadataLists }) => {
       <Input id="preview_url" onChange={handleChange}></Input>
       <Label htmlFor="repo_url">repo url</Label>
       <Input id="repo_url" onChange={handleChange}></Input>
+      <Label htmlFor="homepage_url">homepage url</Label>
+      <Input id="homepage_url" onChange={handleChange}></Input>
       <Label htmlFor="version">version name</Label>
       <Input id="version" onChange={handleChange}></Input>
       <Label htmlFor="file_url">file url</Label>
@@ -102,7 +108,7 @@ const PatchForm = ({ metadataLists, fetchMetadataLists }) => {
               return (
                 <Option
                   key={releaseStatus.id}
-                  id={releaseStatus.release_status}
+                  id={releaseStatus.id}
                   value={releaseStatus.release_status}
                 >
                   {releaseStatus.release_status}

@@ -50,7 +50,7 @@ export const PatchFormSelect = ({
                 return (
                   <Option
                     key={item.id}
-                    id={item[itemPropertyName]}
+                    id={item.id}
                     value={item[itemPropertyName]}
                   >
                     {item[itemPropertyName]}
