@@ -23,7 +23,7 @@ const Sidebar = ({ isSidebarOpen, openSidebar, closeSidebar }) => {
       </LogoHeader>
 
       <Nav isSidebarOpen={isSidebarOpen}>
-        <NavLink>patches</NavLink>
+        <NavLink to="/add-patch">patches</NavLink>
         <NavLink>feed</NavLink>
         <NavLink>inbox</NavLink>
         <NavLink>library</NavLink>
