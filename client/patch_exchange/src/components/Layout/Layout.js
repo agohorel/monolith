@@ -3,8 +3,9 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 
 import Sidebar from "./Sidebar";
-import colors from "../../styles/colors";
-import measurements from "../../styles/measurements";
+import colors from "../../constants/colors";
+import measurements from "../../constants/measurements";
+import timings from "../../constants/timings";
 
 const Layout = ({ children, isSidebarOpen }) => {
   return (
@@ -30,7 +31,9 @@ const Container = styled.div`
 
 const MainContainer = styled.div`
   transition: ${props =>
-    props.isSidebarOpen ? ".15s ease-in margin" : ".15s .15s ease-out margin"};
+    props.isSidebarOpen
+      ? `${timings.sidebarAnimation} ease-in margin`
+      : `${timings.sidebarAnimation} ${timings.sidebarAnimation} ease-out margin`};
   margin-left: ${props =>
     props.isSidebarOpen
       ? `${measurements.sidebarWidthOpen}`

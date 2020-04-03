@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import colors from "../../styles/colors";
+import colors from "../../constants/colors";
 
 export const Button = ({ children }) => {
   return <StyledButton>{children}</StyledButton>;

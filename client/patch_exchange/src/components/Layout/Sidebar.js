@@ -6,8 +6,9 @@ import styled from "styled-components";
 import { openSidebar, closeSidebar } from "../../actions/layoutActions";
 
 import logo from "../../assets/logo.png";
-import colors from "../../styles/colors";
-import measurements from "../../styles/measurements";
+import colors from "../../constants/colors";
+import measurements from "../../constants/measurements";
+import timings from "../../constants/timings";
 
 const Sidebar = ({ isSidebarOpen, openSidebar, closeSidebar }) => {
   return (
@@ -43,8 +44,8 @@ export default connect(mapStateToProps, { openSidebar, closeSidebar })(Sidebar);
 const Drawer = styled.div`
   transition: ${props =>
     props.isSidebarOpen
-      ? ".15s ease-out width, .15s ease-out padding"
-      : ".15s .15s ease-out width, .15s .15s ease-out padding"};
+      ? `${timings.sidebarAnimation} ease-in width, ${timings.sidebarAnimation} ease-in padding`
+      : `${timings.sidebarAnimation} ${timings.sidebarAnimation} ease-out width, ${timings.sidebarAnimation} ${timings.sidebarAnimation} ease-out padding`};
   width: ${props =>
     props.isSidebarOpen
       ? `${measurements.sidebarWidthOpen}`
@@ -70,8 +71,8 @@ const Title = styled.h1`
   font-size: 3rem;
   transition: ${props =>
     props.isSidebarOpen
-      ? ".15s .15s ease-out opacity"
-      : ".15s ease-in opacity"};
+      ? `${timings.sidebarAnimation} ${timings.sidebarAnimation} ease-out opacity`
+      : `${timings.sidebarAnimation} ease-in opacity`};
   opacity: ${props => (props.isSidebarOpen ? 1 : 0)};
 `;
 
@@ -81,8 +82,8 @@ const Nav = styled.nav`
   margin-top: 4rem;
   transition: ${props =>
     props.isSidebarOpen
-      ? ".15s .15s ease-out opacity"
-      : ".15s ease-in opacity"};
+      ? `${timings.sidebarAnimation} ${timings.sidebarAnimation} ease-out opacity`
+      : `${timings.sidebarAnimation} ease-in opacity`};
   opacity: ${props => (props.isSidebarOpen ? 1 : 0)};
 `;
 

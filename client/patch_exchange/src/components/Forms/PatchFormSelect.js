@@ -5,7 +5,7 @@ import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 
 import { Label, Select, Option } from "./FormStyles";
 
-import colors from "../../styles/colors";
+import colors from "../../constants/colors";
 
 export const PatchFormSelect = ({
   category,
