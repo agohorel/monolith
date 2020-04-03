@@ -102,4 +102,16 @@ router.get("/:patchName", async (req, res) => {
   }
 });
 
+router.post("/add-patch", async (req, res) => {
+  try {
+    const res = await db.createPatch(req.body);
+    console.log(res);
+    res.status(201).json({ msg: "Successfully created patch" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ err: "Error adding patch, please try again in a moment" });
+  }
+});
+
 module.exports = router;
