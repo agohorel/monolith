@@ -74,10 +74,10 @@ async function getPatchVersions(patchName) {
       "vf.*",
       "rs.release_status as releaseStatus"
     )
-    .join("versions as v", { "v.patch_fk": "p.id" })
-    .join("version_status as vs", { "vs.version_fk": "v.id" })
-    .join("version_files as vf", { "vf.version_fk": "v.id" })
-    .join("release_statuses as rs", { "rs.id": "vs.version_fk" })
+    .join("versions as v", { "p.id": "v.patch_fk" })
+    .join("version_status as vs", { "v.id": "vs.version_fk" })
+    .join("version_files as vf", { "v.id": "vf.version_fk" })
+    .join("release_statuses as rs", { "vs.status_fk": "rs.id" })
     .where({ "p.name": patchName });
 
   data.forEach(item =>
@@ -133,6 +133,13 @@ async function createPatch(patch) {
         .returning("id")
         .transacting(trx);
 
+      await db("user_patches")
+        .insert({
+          user_fk: Number(patch.user_id),
+          patch_fk: Number(patchID)
+        })
+        .transacting(trx);
+
       const versionID = await db("versions")
         .insert({
           patch_fk: Number(patchID),
@@ -140,13 +147,6 @@ async function createPatch(patch) {
           description: patch.description
         })
         .returning("id")
-        .transacting(trx);
-
-      await db("version_status")
-        .insert({
-          version_fk: Number(versionID),
-          status_fk: Number(patch.releaseStatuses)
-        })
         .transacting(trx);
 
       await db("version_files")
@@ -169,15 +169,6 @@ async function createPatch(patch) {
         )
         .transacting(trx);
 
-      await db("patch_platform")
-        .insert(
-          patch.platforms.map(platform => ({
-            patch_fk: Number(patchID),
-            platform_fk: Number(platform)
-          }))
-        )
-        .transacting(trx);
-
       await db("patch_category")
         .insert(
           patch.categories.map(category => ({
@@ -196,10 +187,19 @@ async function createPatch(patch) {
         )
         .transacting(trx);
 
-      await db("user_patches")
+      await db("patch_platform")
+        .insert(
+          patch.platforms.map(platform => ({
+            patch_fk: Number(patchID),
+            platform_fk: Number(platform)
+          }))
+        )
+        .transacting(trx);
+
+      await db("version_status")
         .insert({
-          user_fk: Number(patch.user_id),
-          patch_fk: Number(patchID)
+          version_fk: Number(versionID),
+          status_fk: Number(patch.releaseStatuses)
         })
         .transacting(trx);
     });
