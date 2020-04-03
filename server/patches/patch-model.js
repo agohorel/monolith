@@ -119,38 +119,95 @@ async function getPatch(patchName) {
   };
 }
 
-// async function createPatch(patch) {
-//   try {
-//     await db.transaction(async trx => {
-//       const id = await knex("patches")
-//         .insert({
-//           name: patch.name,
-//           image_url: patch.image_url,
-//           preview_url: patch.preview_url,
-//           repo_url: patch.repo_url
-//         })
-//         .returning("id")
-//         .transacting(trx);
+async function createPatch(patch) {
+  try {
+    await db.transaction(async trx => {
+      const patchID = await db("patches")
+        .insert({
+          name: patch.name,
+          image_url: patch.image_url,
+          preview_url: patch.preview_url,
+          repo_url: patch.repo_url,
+          homepage_url: patch.homepage_url
+        })
+        .returning("id")
+        .transacting(trx);
 
-//       const versionID = await knex("versions")
-//         .insert({
-//           patch_fk: id,
-//           name: patch.version,
-//           file_url: patch.version_url,
-//           description: patch.version_description
-//         })
-//         .returning("id")
-//         .transacting(trx);
+      const versionID = await db("versions")
+        .insert({
+          patch_fk: Number(patchID),
+          version_name: patch.version,
+          description: patch.description
+        })
+        .returning("id")
+        .transacting(trx);
 
-//       await knex("version_status").insert({
-//         version_fk: versionID,
-//         status_fk: gotta_get_this_somehow
-//       });
-//     });
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
+      await db("version_status")
+        .insert({
+          version_fk: Number(versionID),
+          status_fk: Number(patch.releaseStatuses)
+        })
+        .transacting(trx);
+
+      await db("version_files")
+        .insert({
+          version_fk: Number(versionID),
+          linux_file_url: patch.file_url,
+          mac_file_url: patch.file_url,
+          windows_file_url: patch.file_url,
+          android_file_url: patch.file_url,
+          ios_file_url: patch.file_url
+        })
+        .transacting(trx);
+
+      await db("patch_os")
+        .insert(
+          patch.operatingSystems.map(os => ({
+            patch_fk: Number(patchID),
+            os_fk: Number(os)
+          }))
+        )
+        .transacting(trx);
+
+      await db("patch_platform")
+        .insert(
+          patch.platforms.map(platform => ({
+            patch_fk: Number(patchID),
+            platform_fk: Number(platform)
+          }))
+        )
+        .transacting(trx);
+
+      await db("patch_category")
+        .insert(
+          patch.categories.map(category => ({
+            patch_fk: Number(patchID),
+            category_fk: Number(category)
+          }))
+        )
+        .transacting(trx);
+
+      await db("patch_tags")
+        .insert(
+          patch.tags.map(tag => ({
+            patch_fk: Number(patchID),
+            tag_fk: Number(tag)
+          }))
+        )
+        .transacting(trx);
+
+      await db("user_patches")
+        .insert({
+          user_fk: Number(patch.user_id),
+          patch_fk: Number(patchID)
+        })
+        .transacting(trx);
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+}
 
 async function listPatchMetadata(table, ...selection) {
   return await db(table).select(...selection);
@@ -164,5 +221,6 @@ module.exports = {
   getPatchCategories,
   getPatchTags,
   getPatchVersions,
-  listPatchMetadata
+  listPatchMetadata,
+  createPatch
 };
