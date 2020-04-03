@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 
 import { Label, Select, Option } from "./FormStyles";
 
@@ -27,6 +27,16 @@ export const PatchFormSelect = ({
       ...selectCounts,
       [type]: [...selectCounts[type], selectCounts[type].length + 1]
     });
+  };
+
+  const removeSelectGroup = e => {
+    const type = e.currentTarget.getAttribute("name");
+    if (selectCounts[type].length > 1) {
+      setSelectCounts({
+        ...selectCounts,
+        [type]: selectCounts[type].slice(0, selectCounts[type].length - 1)
+      });
+    }
   };
 
   return (
@@ -56,6 +66,12 @@ export const PatchFormSelect = ({
           name={category}
           onClick={addSelectGroup}
         />
+        <Icon
+          icon={faMinusCircle}
+          size="2x"
+          name={category}
+          onClick={removeSelectGroup}
+        />
       </SelectRow>
     </SelectGroup>
   );
@@ -76,15 +92,16 @@ const SelectRow = styled.div`
   width: 100%;
 
   select {
+    margin-left: 1rem;
     width: 100%;
   }
 `;
 
 const Icon = styled(FontAwesomeIcon)`
   color: ${colors.offwhite};
+  margin-left: 1rem;
   :hover {
     cursor: pointer;
     color: ${colors.nearblack};
   }
-  margin-left: 1rem;
 `;
