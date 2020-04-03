@@ -2,14 +2,20 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 
-import { fetchMetadataLists } from "../../actions/patchActions";
+import { fetchMetadataLists, createPatch } from "../../actions/patchActions";
 
 import { PatchFormSelect } from "./PatchFormSelect";
 import { Form, Label, Input, Textarea, Select, Option } from "./FormStyles";
 import { Button } from "../Button/Button";
 
-const PatchForm = ({ metadataLists, fetchMetadataLists }) => {
+const PatchForm = ({
+  metadataLists,
+  fetchMetadataLists,
+  createPatch,
+  user
+}) => {
   const [formData, setFormData] = useState({
+    user_id: user?.id,
     name: "",
     image_url: "",
     preview_url: "",
@@ -30,23 +36,34 @@ const PatchForm = ({ metadataLists, fetchMetadataLists }) => {
   }, [fetchMetadataLists]);
 
   const handleChange = e => {
-    if (typeof formData[e.target.id] === "string") {
+    if (
+      typeof formData[e.target.id] === "string" &&
+      e.target.id !== "releaseStatuses"
+    ) {
+      // handle text inputs
       setFormData({ ...formData, [e.target.id]: e.target.value });
-    } else {
-      // update array fields
+    } else if (e.target.id === "releaseStatuses") {
+      // handle release status - dropdown but only a single choice
       setFormData({
         ...formData,
-        [e.target.id]: [
-          ...formData[e.target.id],
-          e.target.selectedOptions[0].id
-        ]
+        [e.target.id]: e.target.selectedOptions[0].id
       });
+    } else {
+      // update dropdowns that allow multiple choices
+      const values = [];
+      // get current selections for each input
+      document.querySelectorAll(`#${e.target.id}`).forEach(input => {
+        values.push(input.selectedOptions[0].id);
+      });
+
+      // de-duplicate and append to form state
+      setFormData({ ...formData, [e.target.id]: [...new Set(values)] });
     }
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    // redux action here
+    createPatch(formData);
   };
 
   return (
@@ -125,11 +142,14 @@ const PatchForm = ({ metadataLists, fetchMetadataLists }) => {
 
 const mapStateToProps = state => {
   return {
-    metadataLists: state.patches.metadataLists
+    metadataLists: state.patches.metadataLists,
+    user: state.auth.user
   };
 };
 
-export default connect(mapStateToProps, { fetchMetadataLists })(PatchForm);
+export default connect(mapStateToProps, { fetchMetadataLists, createPatch })(
+  PatchForm
+);
 
 const SelectContainer = styled.div`
   display: flex;
