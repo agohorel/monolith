@@ -92,7 +92,9 @@ const SelectRow = styled.div`
   width: 100%;
 
   select {
-    margin-left: 1rem;
+    :not(:last-of-type) {
+      margin-right: 1rem;
+    }
     width: 100%;
   }
 `;
