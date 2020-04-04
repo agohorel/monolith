@@ -16,9 +16,7 @@ router.post("/register", validateRegisterCreds, async (req, res) => {
     const user = await db.insert("users", data, "id");
     const token = generateToken(user);
     const b2Auth = await createKey(user.username);
-    const { accountId, applicationKey, ...b2Token } = await getClientAuth(
-      b2Auth
-    );
+    const { applicationKey, ...b2Token } = await getClientAuth(b2Auth);
 
     res
       .status(201)
@@ -37,9 +35,7 @@ router.post("/login", validateLoginCreds, async (req, res) => {
     if (user && bcrypt.compareSync(password, user.password)) {
       const token = generateToken(user);
       const b2Auth = await createKey(user.username);
-      const { accountId, applicationKey, ...b2Token } = await getClientAuth(
-        b2Auth
-      );
+      const { applicationKey, ...b2Token } = await getClientAuth(b2Auth);
       res
         .status(201)
         .json({ username: user.username, id: user.id, token, b2Token });
