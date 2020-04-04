@@ -2,9 +2,10 @@ const db = require("../db/dbModel.js");
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const { generateToken } = require("../utils/tokenUtils.js");
+const { createKey } = require("../b2/b2.js");
 const {
   validateRegisterCreds,
-  validateLoginCreds
+  validateLoginCreds,
 } = require("../middleware/validateCreds.js");
 
 router.post("/register", validateRegisterCreds, async (req, res) => {
@@ -14,7 +15,10 @@ router.post("/register", validateRegisterCreds, async (req, res) => {
   try {
     const user = await db.insert("users", data, "id");
     const token = generateToken(user);
-    res.status(201).json({ username: user.username, id: user.id, token });
+    const b2Token = await createKey(user.username);
+    res
+      .status(201)
+      .json({ username: user.username, id: user.id, token, b2Token });
   } catch (err) {
     console.error(err);
     res.status(500).json({ err: "Server error :(" });
@@ -28,7 +32,10 @@ router.post("/login", validateLoginCreds, async (req, res) => {
 
     if (user && bcrypt.compareSync(password, user.password)) {
       const token = generateToken(user);
-      res.status(201).json({ username: user.username, id: user.id, token });
+      const b2Token = await createKey(user.username);
+      res
+        .status(201)
+        .json({ username: user.username, id: user.id, token, b2Token });
     } else {
       res.status(401).json({ err: "Invalid credentials" });
     }
