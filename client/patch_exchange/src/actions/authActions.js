@@ -6,10 +6,10 @@ import {
   REGISTER_FAILURE,
   LOGIN_LOADING,
   LOGIN_SUCCESS,
-  LOGIN_FAILURE
+  LOGIN_FAILURE,
 } from "./types";
 
-export const register = creds => async dispatch => {
+export const register = (creds) => async (dispatch) => {
   dispatch({ type: REGISTER_LOADING });
 
   try {
@@ -17,7 +17,7 @@ export const register = creds => async dispatch => {
       "http://localhost:5000/api/auth/register",
       creds
     );
-    localStorage.setItem("patchex_token", res.data.token);
+    localStorage.setItem("patchex_user", JSON.stringify(res.data));
     dispatch({ type: REGISTER_SUCCESS, payload: res.data });
   } catch (error) {
     console.error(error);
@@ -25,12 +25,12 @@ export const register = creds => async dispatch => {
   }
 };
 
-export const login = creds => async dispatch => {
+export const login = (creds) => async (dispatch) => {
   dispatch({ type: LOGIN_LOADING });
 
   try {
     const res = await axios.post("http://localhost:5000/api/auth/login", creds);
-    localStorage.setItem("patchex_token", res.data.token);
+    localStorage.setItem("patchex_user", JSON.stringify(res.data));
     dispatch({ type: LOGIN_SUCCESS, payload: res.data });
   } catch (error) {
     console.error(error);
