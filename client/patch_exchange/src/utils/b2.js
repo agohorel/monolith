@@ -5,7 +5,7 @@ const getUploadUrl = async (auth) => {
     const bucket = await getBucketId(auth);
 
     const res = await axios.post(
-      `${auth.apiUrl}/b2api/v2/b2_get_upload_url`,
+      `https://cors-anywhere.herokuapp.com/${auth.apiUrl}/b2api/v2/b2_get_upload_url`,
       { bucketId: bucket.id },
       {
         headers: { Authorization: auth.token },
@@ -26,13 +26,13 @@ const getUploadUrl = async (auth) => {
 const getBucketId = async (auth) => {
   try {
     const res = await axios.get(
-      `${auth.apiUrl}/b2api/v2/b2_list_buckets?accountId=${auth.accountId}`,
+      `https://cors-anywhere.herokuapp.com/${auth.apiUrl}/b2api/v2/b2_list_buckets?accountId=${auth.accountId}`,
       {
         headers: { Authorization: auth.token },
       }
     );
 
-    const bucketData = res.data.buckets[0];
+    const bucketData = res.data.buckets[1];
 
     const { bucketId, bucketName } = bucketData;
 
@@ -45,25 +45,27 @@ const getBucketId = async (auth) => {
   }
 };
 
-const uploadFile = async (auth) => {
-  const fileData =
-    "Each thing (a mirror's face, let us say) was infinite things";
-  const fileName = "aleph.txt";
-  const contentType = "text/plain";
-  const sha1 = crypto.createHash("sha1").update(fileData).digest("hex");
-
+const uploadFile = async (user, file, hash) => {
   try {
-    const uploadUrl = await getUploadUrl(auth);
-    const res = await axios.post(uploadUrl.url, fileData, {
-      headers: {
-        Authorization: uploadUrl.token,
-        "Content-Type": contentType,
-        "Content-Length": fileData.length,
-        "X-Bz-File-name": fileName,
-        "X-Bz-Content-Sha1": sha1,
-        "X-Bz-Info-Author": "John-Doe",
-      },
-    });
+    const uploadUrl = await getUploadUrl(user.b2Auth);
+    const data = new FormData();
+    data.append("file", file);
+
+    console.log(file, data.get("file"));
+
+    const res = await axios.post(
+      `https://cors-anywhere.herokuapp.com/${uploadUrl.url}`,
+      file,
+      {
+        headers: {
+          Authorization: uploadUrl.token,
+          "Content-Type": file.type,
+          "X-Bz-File-Name": file.name,
+          "X-Bz-Content-Sha1": hash,
+          "X-Bz-Info-Author": user.username,
+        },
+      }
+    );
 
     console.log(res);
   } catch (err) {
