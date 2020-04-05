@@ -54,7 +54,13 @@ async function createKey(keyName) {
       `${auth.apiUrl}/b2api/v2/b2_create_key`,
       {
         accountId: auth.accountId,
-        capabilities: ["listBuckets", "listFiles", "readFiles", "deleteFiles"],
+        capabilities: [
+          "listBuckets",
+          "listFiles",
+          "readFiles",
+          "deleteFiles",
+          "writeFiles",
+        ],
         keyName,
         validDurationInSeconds: 43200,
       },
@@ -71,7 +77,7 @@ async function createKey(keyName) {
 
 async function getClientAuth(b2Key) {
   try {
-    if (b2Key !== undefined) {
+    if (b2Key) {
       const authString = `${b2Key.applicationKeyId}:${b2Key.applicationKey}`;
       const authStringBase64 = new Buffer.alloc(
         authString.length,
