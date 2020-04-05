@@ -15,12 +15,12 @@ router.post("/register", validateRegisterCreds, async (req, res) => {
   try {
     const user = await db.insert("users", data, "id");
     const token = generateToken(user);
-    const b2Auth = await createKey(user.username);
-    const { applicationKey, ...b2Token } = await getClientAuth(b2Auth);
+    const b2Key = await createKey(user.username);
+    const { applicationKey, ...b2Auth } = await getClientAuth(b2Key);
 
     res
       .status(201)
-      .json({ username: user.username, id: user.id, token, b2Token });
+      .json({ username: user.username, id: user.id, token, b2Auth });
   } catch (err) {
     console.error(err);
     res.status(500).json({ err: "Server error :(" });
@@ -34,11 +34,11 @@ router.post("/login", validateLoginCreds, async (req, res) => {
 
     if (user && bcrypt.compareSync(password, user.password)) {
       const token = generateToken(user);
-      const b2Auth = await createKey(user.username);
-      const { applicationKey, ...b2Token } = await getClientAuth(b2Auth);
+      const b2Key = await createKey(user.username);
+      const { applicationKey, ...b2Auth } = await getClientAuth(b2Key);
       res
         .status(201)
-        .json({ username: user.username, id: user.id, token, b2Token });
+        .json({ username: user.username, id: user.id, token, b2Auth });
     } else {
       res.status(401).json({ err: "Invalid credentials" });
     }
