@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { fetchMetadataLists, createPatch } from "../../actions/patchActions";
 import { uploadPatch } from "../../actions/b2Actions";
 
+import { FileUploader } from "./FileUploader";
 import { PatchFormSelect } from "./PatchFormSelect";
 import { Form, Label, Input, Textarea, Select, Option } from "./FormStyles";
 import { Button } from "../Button/Button";
@@ -16,6 +17,8 @@ const PatchForm = ({
   user,
   uploadPatch,
 }) => {
+  const [fileList, setFileList] = useState([]);
+
   const [formData, setFormData] = useState({
     user_id: user?.id,
     name: "",
@@ -24,16 +27,14 @@ const PatchForm = ({
     repo_url: "",
     homepage_url: "",
     version: "",
-    file_url: "",
     description: "",
+    file_url: "",
     releaseStatuses: [],
     operatingSystems: [],
     platforms: [],
     categories: [],
     tags: [],
   });
-
-  console.log(user);
 
   useEffect(() => {
     fetchMetadataLists();
@@ -61,12 +62,13 @@ const PatchForm = ({
   };
 
   const handleFileChange = async (e) => {
-    uploadPatch(e.target.files[0], user);
+    setFileList({ ...fileList, [e.target.id]: e.target.files[0] });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createPatch(formData);
+    Object.keys(fileList).map((file) => uploadPatch(fileList[file], user));
+    // createPatch(formData);
   };
 
   return (
@@ -89,8 +91,15 @@ const PatchForm = ({
       <Label htmlFor="version">version name</Label>
       <Input id="version" onChange={handleTextChange}></Input>
 
-      <Label htmlFor="file_url">file url</Label>
-      <Input type="file" id="file_url" onChange={handleFileChange}></Input>
+      {metadataLists.operatingSystems?.map((os) => {
+        return (
+          <FileUploader
+            key={os.id}
+            handleFileChange={handleFileChange}
+            label={os.os_name}
+          ></FileUploader>
+        );
+      })}
 
       <Label htmlFor="description">description</Label>
       <Textarea id="description" onChange={handleTextChange}></Textarea>
