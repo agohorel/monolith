@@ -4,13 +4,13 @@ import {
   REGISTER_FAILURE,
   LOGIN_LOADING,
   LOGIN_SUCCESS,
-  LOGIN_FAILURE
+  LOGIN_FAILURE,
 } from "../actions/types.js";
 
 const initialState = {
   loading: false,
-  user: null,
-  errors: null
+  user: JSON.parse(localStorage.getItem("patchex_user")) || null,
+  errors: null,
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -21,7 +21,7 @@ export const authReducer = (state = initialState, action) => {
     case LOGIN_LOADING:
       return {
         ...state,
-        loading: true
+        loading: true,
       };
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
@@ -29,7 +29,7 @@ export const authReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         user: payload,
-        errors: null
+        errors: null,
       };
     case REGISTER_FAILURE:
     case LOGIN_FAILURE:
@@ -37,7 +37,7 @@ export const authReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         user: null,
-        errors: payload
+        errors: payload,
       };
     default:
       return state;

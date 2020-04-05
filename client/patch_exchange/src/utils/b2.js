@@ -51,8 +51,6 @@ const uploadFile = async (user, file, hash) => {
     const data = new FormData();
     data.append("file", file);
 
-    console.log(file, data.get("file"));
-
     const res = await axios.post(
       `https://cors-anywhere.herokuapp.com/${uploadUrl.url}`,
       file,

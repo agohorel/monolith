@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 
 import { fetchMetadataLists, createPatch } from "../../actions/patchActions";
+import { uploadPatch } from "../../actions/b2Actions";
 
 import { PatchFormSelect } from "./PatchFormSelect";
 import { Form, Label, Input, Textarea, Select, Option } from "./FormStyles";
@@ -13,6 +14,7 @@ const PatchForm = ({
   fetchMetadataLists,
   createPatch,
   user,
+  uploadPatch,
 }) => {
   const [formData, setFormData] = useState({
     user_id: user?.id,
@@ -30,6 +32,8 @@ const PatchForm = ({
     categories: [],
     tags: [],
   });
+
+  console.log(user);
 
   useEffect(() => {
     fetchMetadataLists();
@@ -56,16 +60,14 @@ const PatchForm = ({
     });
   };
 
-  const handleFileChange = (e) => {
-    console.log(e.target.files);
+  const handleFileChange = async (e) => {
+    uploadPatch(e.target.files[0], user);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     createPatch(formData);
   };
-
-  console.log(formData);
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -155,9 +157,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { fetchMetadataLists, createPatch })(
-  PatchForm
-);
+export default connect(mapStateToProps, {
+  fetchMetadataLists,
+  createPatch,
+  uploadPatch,
+})(PatchForm);
 
 const SelectContainer = styled.div`
   display: flex;
