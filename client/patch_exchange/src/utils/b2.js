@@ -58,7 +58,7 @@ const uploadFile = async (user, file, hash) => {
         headers: {
           Authorization: uploadUrl.token,
           "Content-Type": file.type,
-          "X-Bz-File-Name": file.name,
+          "X-Bz-File-Name": `${user.username}/${file.name}`,
           "X-Bz-Content-Sha1": hash,
           "X-Bz-Info-Author": user.username,
         },
