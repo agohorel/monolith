@@ -65,9 +65,9 @@ const uploadFile = async (user, file, hash) => {
       }
     );
 
-    console.log(res);
+    return res;
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -84,4 +84,19 @@ const generateSha1 = async (file) => {
   return hash;
 };
 
-export { getUploadUrl, getBucketId, uploadFile, generateSha1 };
+const uploadFileWithRetries = async (user, file, hash, attempts) => {
+  try {
+    return await uploadFile(user, file, hash);
+  } catch (err) {
+    if (attempts === 1) throw err;
+    return uploadFileWithRetries(user, file, hash, attempts - 1);
+  }
+};
+
+export {
+  getUploadUrl,
+  getBucketId,
+  uploadFile,
+  generateSha1,
+  uploadFileWithRetries,
+};
