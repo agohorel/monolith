@@ -48,21 +48,24 @@ const getBucketId = async (auth) => {
 const uploadFile = async (user, file, hash) => {
   try {
     const uploadUrl = await getUploadUrl(user.b2Auth);
-    const data = new FormData();
-    data.append("file", file);
+
+    const headers = {
+      headers: {
+        Authorization: uploadUrl.token,
+        "Content-Type": file.type,
+        "X-Bz-File-Name": `${user.username.replace(
+          / /g,
+          "_"
+        )}/${file.name.replace(/ /g, "_")}`,
+        "X-Bz-Content-Sha1": hash,
+        "X-Bz-Info-Author": user.username.replace(/ /g, "_"),
+      },
+    };
 
     const res = await axios.post(
       `https://cors-anywhere.herokuapp.com/${uploadUrl.url}`,
       file,
-      {
-        headers: {
-          Authorization: uploadUrl.token,
-          "Content-Type": file.type,
-          "X-Bz-File-Name": `${user.username}/${file.name}`,
-          "X-Bz-Content-Sha1": hash,
-          "X-Bz-Info-Author": user.username,
-        },
-      }
+      headers
     );
 
     return res;
