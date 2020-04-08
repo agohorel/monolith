@@ -22,15 +22,6 @@ async function getAuth() {
       }
     );
 
-    console.log({
-      accountId: process.env.B2_KEY_ID,
-      applicationKey: process.env.B2_APPLICATION_KEY,
-      apiUrl: res.data.apiUrl,
-      token: res.data.authorizationToken,
-      downloadUrl: res.data.downloadUrl,
-      recommendedPartSize: res.data.recommendedPartSize,
-    });
-
     return {
       accountId: process.env.B2_KEY_ID,
       applicationKey: process.env.B2_APPLICATION_KEY,

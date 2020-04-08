@@ -16,6 +16,7 @@ const PatchForm = ({
   createPatch,
   user,
   uploadPatch,
+  b2Response,
 }) => {
   const [fileList, setFileList] = useState([]);
 
@@ -28,7 +29,11 @@ const PatchForm = ({
     homepage_url: "",
     version: "",
     description: "",
-    file_url: "",
+    linux_file: "",
+    windows_file: "",
+    macOS_file: "",
+    android_file: "",
+    iOS_file: "",
     releaseStatuses: [],
     operatingSystems: [],
     platforms: [],
@@ -39,6 +44,13 @@ const PatchForm = ({
   useEffect(() => {
     fetchMetadataLists();
   }, [fetchMetadataLists]);
+
+  useEffect(() => {
+    setFormData((formData) => ({
+      ...formData,
+      [b2Response?.fileInfo.os]: b2Response?.fileId,
+    }));
+  }, [b2Response]);
 
   const handleTextChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -62,13 +74,21 @@ const PatchForm = ({
   };
 
   const handleFileChange = async (e) => {
-    setFileList({ ...fileList, [e.target.id]: e.target.files[0] });
+    setFileList([...fileList, [e.target.id, e.target.files[0]]]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    Object.keys(fileList).map((file) => uploadPatch(fileList[file], user));
-    // createPatch(formData);
+
+    for (const file of fileList) {
+      await uploadPatch(file[0], file[1], user);
+    }
+
+    submitPatchToDB();
+  };
+
+  const submitPatchToDB = () => {
+    createPatch(formData);
   };
 
   return (
@@ -163,6 +183,7 @@ const mapStateToProps = (state) => {
   return {
     metadataLists: state.patches.metadataLists,
     user: state.auth.user,
+    b2Response: state.b2.response,
   };
 };
 

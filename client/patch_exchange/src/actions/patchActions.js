@@ -5,10 +5,10 @@ import {
   META_LIST_FAILURE,
   ADD_PATCH_LOADING,
   ADD_PATCH_SUCCESS,
-  ADD_PATCH_FAILURE
+  ADD_PATCH_FAILURE,
 } from "./types";
 
-export const fetchMetadataLists = () => async dispatch => {
+export const fetchMetadataLists = () => async (dispatch) => {
   dispatch({ type: META_LIST_LOADING });
   try {
     const res = await axios.get(
@@ -18,13 +18,15 @@ export const fetchMetadataLists = () => async dispatch => {
   } catch (error) {
     dispatch({
       type: META_LIST_FAILURE,
-      payload: "Failed to fetch patch metadata categories"
+      payload: "Failed to fetch patch metadata categories",
     });
   }
 };
 
-export const createPatch = patchData => async dispatch => {
+export const createPatch = (patchData) => async (dispatch) => {
   dispatch({ type: ADD_PATCH_LOADING });
+
+  console.log(patchData);
 
   try {
     const res = await axios.post(

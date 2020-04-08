@@ -45,7 +45,7 @@ const getBucketId = async (auth) => {
   }
 };
 
-const uploadFile = async (user, file, hash) => {
+const uploadFile = async (user, os, file, hash) => {
   try {
     const uploadUrl = await getUploadUrl(user.b2Auth);
 
@@ -59,6 +59,7 @@ const uploadFile = async (user, file, hash) => {
         )}/${file.name.replace(/ /g, "_")}`,
         "X-Bz-Content-Sha1": hash,
         "X-Bz-Info-Author": user.username.replace(/ /g, "_"),
+        "X-Bz-Info-Os": os,
       },
     };
 
@@ -87,12 +88,12 @@ const generateSha1 = async (file) => {
   return hash;
 };
 
-const uploadFileWithRetries = async (user, file, hash, attempts) => {
+const uploadFileWithRetries = async (user, os, file, hash, attempts) => {
   try {
-    return await uploadFile(user, file, hash);
+    return await uploadFile(user, os, file, hash);
   } catch (err) {
     if (attempts === 1) throw err;
-    return uploadFileWithRetries(user, file, hash, attempts - 1);
+    return uploadFileWithRetries(user, os, file, hash, attempts - 1);
   }
 };
 

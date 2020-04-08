@@ -81,7 +81,7 @@ router.get("/metadata-lists", async (req, res) => {
       platforms,
       categories,
       releaseStatuses,
-      tags
+      tags,
     });
   } catch (error) {
     res.status(500).json({ err: error });
@@ -104,10 +104,10 @@ router.get("/:patchName", async (req, res) => {
 
 router.post("/add-patch", async (req, res) => {
   try {
-    const res = await db.createPatch(req.body);
-    console.log(res);
+    await db.createPatch(req.body);
     res.status(201).json({ msg: "Successfully created patch" });
   } catch (error) {
+    console.error(error);
     res
       .status(500)
       .json({ err: "Error adding patch, please try again in a moment" });
