@@ -35,6 +35,7 @@ export const createPatch = (patchData) => async (dispatch) => {
     );
     dispatch({ type: ADD_PATCH_SUCCESS, payload: res.data });
   } catch (error) {
+    console.error(error);
     dispatch({ type: ADD_PATCH_FAILURE, payload: error });
   }
 };

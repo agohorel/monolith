@@ -1,10 +1,15 @@
 import React from "react";
 import { Label, Input } from "./FormStyles";
 
-export const FileUploader = ({ label, handleFileChange }) => {
+export const FileUploader = ({ label, handleFileChange, type }) => {
   return (
     <>
-      <Label htmlFor={`${label}_file`}>upload {label} binary</Label>
+      {type === "image" ? (
+        <Label htmlFor={`${label}_file`}>upload {label}</Label>
+      ) : (
+        <Label htmlFor={`${label}_file`}>upload {label} binary</Label>
+      )}
+
       <Input
         type="file"
         id={`${label}_file`}

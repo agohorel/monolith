@@ -127,7 +127,7 @@ async function createPatch(patch) {
       const patchID = await db("patches")
         .insert({
           name: patch.name,
-          image_url: patch.image_url,
+          image_url: patch.image_file,
           preview_url: patch.preview_url,
           repo_url: patch.repo_url,
           homepage_url: patch.homepage_url,

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 
 import { fetchMetadataLists, createPatch } from "../../actions/patchActions";
-import { uploadPatch } from "../../actions/b2Actions";
+import { uploadPatch, uploadPatchImage } from "../../actions/b2Actions";
 
 import { FileUploader } from "./FileUploader";
 import { PatchFormSelect } from "./PatchFormSelect";
@@ -17,13 +17,16 @@ const PatchForm = ({
   user,
   uploadPatch,
   b2Response,
+  uploadPatchImage,
 }) => {
   const [fileList, setFileList] = useState([]);
+  const [image, setImage] = useState(null);
+  const [isUploadComplete, setIsUploadComplete] = useState(false);
 
   const [formData, setFormData] = useState({
     user_id: user?.id,
     name: "",
-    image_url: "",
+    image_file: "",
     preview_url: "",
     repo_url: "",
     homepage_url: "",
@@ -46,10 +49,17 @@ const PatchForm = ({
   }, [fetchMetadataLists]);
 
   useEffect(() => {
-    setFormData((formData) => ({
-      ...formData,
-      [b2Response?.fileInfo.os]: b2Response?.fileId,
-    }));
+    if (b2Response?.contentType.includes("image")) {
+      setFormData((formData) => ({
+        ...formData,
+        image_file: b2Response?.fileId,
+      }));
+    } else {
+      setFormData((formData) => ({
+        ...formData,
+        [b2Response?.fileInfo.os]: b2Response?.fileId,
+      }));
+    }
   }, [b2Response]);
 
   const handleTextChange = (e) => {
@@ -77,6 +87,10 @@ const PatchForm = ({
     setFileList([...fileList, [e.target.id, e.target.files[0]]]);
   };
 
+  const handleImageSelect = (e) => {
+    setImage(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -84,20 +98,30 @@ const PatchForm = ({
       await uploadPatch(file[0], file[1], user);
     }
 
-    submitPatchToDB();
+    await uploadPatchImage(image, user);
+
+    setIsUploadComplete(true);
   };
 
-  const submitPatchToDB = () => {
-    createPatch(formData);
-  };
+  useEffect(() => {
+    if (isUploadComplete) {
+      createPatch(formData);
+    }
+  }, [isUploadComplete, createPatch, formData]);
 
   return (
     <Form onSubmit={handleSubmit}>
       <Label htmlFor="name">name</Label>
       <Input id="name" onChange={handleTextChange}></Input>
-
+      {/* 
       <Label htmlFor="image_url">image url</Label>
-      <Input id="image_url" onChange={handleTextChange}></Input>
+      <Input id="image_url" onChange={handleTextChange}></Input> */}
+
+      <FileUploader
+        handleFileChange={handleImageSelect}
+        label="image"
+        type="image"
+      ></FileUploader>
 
       <Label htmlFor="preview_url">preview url</Label>
       <Input id="preview_url" onChange={handleTextChange}></Input>
@@ -191,6 +215,7 @@ export default connect(mapStateToProps, {
   fetchMetadataLists,
   createPatch,
   uploadPatch,
+  uploadPatchImage,
 })(PatchForm);
 
 const SelectContainer = styled.div`
