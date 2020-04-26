@@ -9,6 +9,9 @@ import {
   SEARCH_PATCH_LOADING,
   SEARCH_PATCH_SUCCESS,
   SEARCH_PATCH_FAILURE,
+  FETCH_USER_PATCHES_LOADING,
+  FETCH_USER_PATCHES_SUCCESS,
+  FETCH_USER_PATCHES_FAILURE,
 } from "./types";
 
 export const fetchMetadataLists = () => async (dispatch) => {
@@ -56,5 +59,18 @@ export const searchPatch = (patchName) => async (dispatch) => {
     dispatch({ type: SEARCH_PATCH_SUCCESS, payload: res.data });
   } catch (error) {
     dispatch({ type: SEARCH_PATCH_FAILURE, payload: error });
+  }
+};
+
+export const fetchUserPatches = (userID) => async (dispatch) => {
+  dispatch({ type: FETCH_USER_PATCHES_LOADING });
+
+  try {
+    const res = await axios.get(
+      `http://localhost:5000/api/patches/?userID=${userID}`
+    );
+    dispatch({ type: FETCH_USER_PATCHES_SUCCESS, payload: res.data.patches });
+  } catch (error) {
+    dispatch({ type: FETCH_USER_PATCHES_FAILURE, payload: error });
   }
 };

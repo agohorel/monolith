@@ -8,6 +8,9 @@ import {
   SEARCH_PATCH_LOADING,
   SEARCH_PATCH_SUCCESS,
   SEARCH_PATCH_FAILURE,
+  FETCH_USER_PATCHES_LOADING,
+  FETCH_USER_PATCHES_SUCCESS,
+  FETCH_USER_PATCHES_FAILURE,
 } from "../actions/types";
 
 const intiialState = {
@@ -15,6 +18,7 @@ const intiialState = {
   errors: false,
   metadataLists: {},
   searchResult: {},
+  userPatches: [],
 };
 
 export const patchReducer = (state = intiialState, action) => {
@@ -24,6 +28,7 @@ export const patchReducer = (state = intiialState, action) => {
     case META_LIST_LOADING:
     case ADD_PATCH_LOADING:
     case SEARCH_PATCH_LOADING:
+    case FETCH_USER_PATCHES_LOADING:
       return {
         ...state,
         errors: null,
@@ -46,9 +51,16 @@ export const patchReducer = (state = intiialState, action) => {
         searchResult: payload,
       };
 
+    case FETCH_USER_PATCHES_SUCCESS:
+      return {
+        ...state,
+        userPatches: payload,
+      };
+
     case META_LIST_FAILURE:
     case ADD_PATCH_FAILURE:
-    case SEARCH_PATCH_LOADING:
+    case SEARCH_PATCH_FAILURE:
+    case FETCH_USER_PATCHES_FAILURE:
       return {
         ...state,
         loading: false,
