@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
+import colors from "../../constants/colors";
+
 export const ProgressBar = ({ progress }) => {
   return (
     <ProgressContainer>
@@ -11,15 +13,15 @@ export const ProgressBar = ({ progress }) => {
 
 const ProgressContainer = styled.div`
   width: 100%;
-  height: 8px;
-  background-color: rgb(183, 155, 229);
-  border-radius: 5px;
+  height: 12px;
+  background-color: ${colors.nearblack};
+  border-radius: 3px;
 `;
 
 const Progress = styled.div`
   width: ${(props) => `${props.progress}%`};
-  background-color: rgba(103, 58, 183, 1);
-  height: 50px;
+  background-color: ${colors.offwhite};
+  height: 12px;
   margin: 0;
-  border-radius: 5px;
+  border-radius: 3px;
 `;

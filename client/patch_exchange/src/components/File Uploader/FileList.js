@@ -4,19 +4,17 @@ import styled from "styled-components";
 
 import { ProgressBar } from "./ProgressBar";
 
+import colors from "../../constants/colors";
+
 const FileList = ({ fileList }) => {
-  console.log(fileList);
   return (
     <Files>
       {fileList.map((file) => (
         <Row key={file.binary.name}>
           <Filename>{file.binary.name}</Filename>
-          {/* {file.progress > 0 ||
-            (file.progress === 100 && ( */}
           <ProgressWrapper>
             <ProgressBar progress={file.progress}></ProgressBar>
           </ProgressWrapper>
-          // ))}
         </Row>
       ))}
     </Files>
@@ -33,27 +31,23 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {})(FileList);
 
 const Files = styled.div`
-  margin-left: 32px;
   align-items: flex-start;
   justify-items: flex-start;
   flex: 1;
   overflow-y: auto;
 `;
 const Row = styled.div`
+  margin-bottom: 2rem;
   display: flex;
-  flex: 1;
   flex-direction: column;
-  justify-content: space-between;
   height: 50px;
-  padding: 8px;
   overflow: hidden;
-  box-sizing: border-box;
 `;
 
 const Filename = styled.span`
   margin-bottom: 8px;
   font-size: 16px;
-  color: #555;
+  color: ${colors.offwhite};
 `;
 
 const ProgressWrapper = styled.div`
