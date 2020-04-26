@@ -99,7 +99,7 @@ async function getPatchVersions(patchName) {
 
 async function getUserPatches(userID) {
   return db("users as u")
-    .select("p.name", "p.image_url")
+    .select("p.name", "p.image_url", "p.id")
     .join("user_patches as up", { "u.id": "up.user_fk" })
     .join("patches as p", { "up.patch_fk": "p.id" })
     .where({ "u.id": userID });
