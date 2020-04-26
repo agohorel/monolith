@@ -12,29 +12,29 @@ export const PatchFormSelect = ({
   label,
   itemPropertyName,
   handleChange,
-  metadataLists
+  metadataLists,
 }) => {
   const [selectCounts, setSelectCounts] = useState({
     operatingSystems: [1],
     platforms: [1],
     categories: [1],
-    tags: [1]
+    tags: [1],
   });
 
-  const addSelectGroup = e => {
+  const addSelectGroup = (e) => {
     const type = e.currentTarget.getAttribute("name");
     setSelectCounts({
       ...selectCounts,
-      [type]: [...selectCounts[type], selectCounts[type].length + 1]
+      [type]: [...selectCounts[type], selectCounts[type].length + 1],
     });
   };
 
-  const removeSelectGroup = e => {
+  const removeSelectGroup = (e) => {
     const type = e.currentTarget.getAttribute("name");
     if (selectCounts[type].length > 1) {
       setSelectCounts({
         ...selectCounts,
-        [type]: selectCounts[type].slice(0, selectCounts[type].length - 1)
+        [type]: selectCounts[type].slice(0, selectCounts[type].length - 1),
       });
     }
   };
@@ -43,10 +43,10 @@ export const PatchFormSelect = ({
     <SelectGroup>
       <Label htmlFor={category}>{label}</Label>
       <SelectRow>
-        {selectCounts[category].map(idx => {
+        {selectCounts[category].map((idx) => {
           return (
             <Select key={idx} id={category} onChange={handleChange}>
-              {metadataLists[category]?.map(item => {
+              {metadataLists[category]?.map((item) => {
                 return (
                   <Option
                     key={item.id}

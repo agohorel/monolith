@@ -1,9 +1,8 @@
-// https://malcoded.com/posts/react-file-upload/
-
 import React from "react";
 import styled from "styled-components";
 
 import DropZone from "./DropZone";
+import colors from "../../constants/colors";
 
 export const FileUploader = ({ label, type, uploadProgress }) => {
   return (
@@ -22,33 +21,20 @@ export const FileUploader = ({ label, type, uploadProgress }) => {
 };
 
 const Uploader = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  align-items: flex-start;
-  text-align: left;
-  overflow: hidden;
+  width: 33%;
 `;
 
-const Title = styled.span`
-  margin-bottom: 32px;
-  color: #555;
+const Title = styled.h4`
+  font-size: 16px;
+  color: ${colors.offwhite};
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 100;
 `;
 
 const Content = styled.div`
   display: flex;
-  flex-direction: row;
-  padding-top: 16px;
-  box-sizing: border-box;
-  width: 100%;
-`;
-
-const Files = styled.div`
-  margin-left: 32px;
-  align-items: flex-start;
-  justify-items: flex-start;
-  flex: 1;
-  overflow-y: auto;
+  justify-content: center;
 `;
 
 const Actions = styled.div`

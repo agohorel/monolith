@@ -1,9 +1,9 @@
-// https://malcoded.com/posts/react-dropzone/
-
 import React, { useRef, useState } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { addFile, addImage } from "../../actions/b2Actions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
 
 import colors from "../../constants/colors";
 
@@ -64,14 +64,13 @@ const DropZone = ({ type, label, disabled, addFile, addImage }) => {
       disabled={disabled}
       highlight={highlight}
     >
-      <Icon alt="upload"></Icon>
+      <Icon icon={faFileUpload} alt="upload"></Icon>
       <Input
         id={`${label}_file`}
         ref={inputRef}
         type="file"
         onChange={onFileAdded}
       ></Input>
-      <Text>Upload A File</Text>
     </Dropzone>
   );
 };
@@ -79,23 +78,37 @@ const DropZone = ({ type, label, disabled, addFile, addImage }) => {
 export default connect(null, { addFile, addImage })(DropZone);
 
 const Dropzone = styled.div`
+  width: 67%;
   height: 200px;
-  width: 200px;
   background-color: ${(props) =>
     props.highlight ? `${colors.offwhite}` : `${colors.midgrey}`};
-  border: 2px dashed rgb(187, 186, 186);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   font-size: 16px;
   cursor: ${(props) => (props.disabled ? "default" : "pointer")};
+
+  :hover {
+    opacity: 0.8;
+
+    svg {
+      color: ${colors.nearblack};
+    }
+  }
 `;
-
-const Icon = styled.img``;
-
-const Text = styled.span``;
 
 const Input = styled.input`
   display: none;
+`;
+
+const Icon = styled(FontAwesomeIcon)`
+  color: ${colors.offwhite};
+  margin-left: 1rem;
+  font-size: calc(20px + 2vw);
+  :hover {
+    cursor: pointer;
+    color: ${colors.nearblack};
+  }
 `;

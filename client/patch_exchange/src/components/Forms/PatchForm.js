@@ -180,25 +180,27 @@ const PatchForm = ({
         </SelectRow>
       </SelectContainer>
 
-      <FileUploader
-        label="image"
-        type="image"
-        uploadProgress={
-          fileList.filter((f) => f?.type === "image")[0]?.progress
-        }
-      ></FileUploader>
+      <UploadContainer>
+        <FileUploader
+          label="image"
+          type="image"
+          uploadProgress={
+            fileList.filter((f) => f?.type === "image")[0]?.progress
+          }
+        ></FileUploader>
 
-      {metadataLists.operatingSystems?.map((os) => {
-        return (
-          <FileUploader
-            key={os.id}
-            label={os.os_name}
-            uploadProgress={
-              fileList.filter((f) => f?.os?.includes(os.os_name)).progress
-            }
-          ></FileUploader>
-        );
-      })}
+        {metadataLists.operatingSystems?.map((os) => {
+          return (
+            <FileUploader
+              key={os.id}
+              label={os.os_name}
+              uploadProgress={
+                fileList.filter((f) => f?.os?.includes(os.os_name)).progress
+              }
+            ></FileUploader>
+          );
+        })}
+      </UploadContainer>
 
       <FileList fileList={fileList}></FileList>
 
@@ -239,4 +241,10 @@ const SelectRow = styled.div`
   select {
     width: 100%;
   }
+`;
+
+const UploadContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
