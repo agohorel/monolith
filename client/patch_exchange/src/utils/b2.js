@@ -1,8 +1,10 @@
 import axios from "axios";
+import store from "../store";
+import { updateFileUploadProgress } from "../actions/b2Actions";
 
-const getUploadUrl = async (auth) => {
+const getUploadUrl = async (auth, bucketType) => {
   try {
-    const bucket = await getBucketId(auth);
+    const bucket = await getBucketId(auth, bucketType);
 
     const res = await axios.post(
       `https://cors-anywhere.herokuapp.com/${auth.apiUrl}/b2api/v2/b2_get_upload_url`,
@@ -23,7 +25,9 @@ const getUploadUrl = async (auth) => {
   }
 };
 
-const getBucketId = async (auth) => {
+const getBucketId = async (auth, bucketType) => {
+  let bucketData = {};
+
   try {
     const res = await axios.get(
       `https://cors-anywhere.herokuapp.com/${auth.apiUrl}/b2api/v2/b2_list_buckets?accountId=${auth.accountId}`,
@@ -32,9 +36,17 @@ const getBucketId = async (auth) => {
       }
     );
 
-    const bucketData = res.data.buckets[1];
+    if (bucketType === "image") {
+      bucketData = res.data.buckets.filter(
+        (b) => b.bucketName === "patchex-images"
+      );
+    } else {
+      bucketData = res.data.buckets.filter(
+        (b) => b.bucketName === "patchex-patches"
+      );
+    }
 
-    const { bucketId, bucketName } = bucketData;
+    const { bucketId, bucketName } = bucketData[0];
 
     return {
       id: bucketId,
@@ -46,10 +58,11 @@ const getBucketId = async (auth) => {
 };
 
 const uploadFile = async (user, os, file, hash) => {
+  console.log(os);
   try {
-    const uploadUrl = await getUploadUrl(user.b2Auth);
+    const uploadUrl = await getUploadUrl(user.b2Auth, os);
 
-    const headers = {
+    const options = {
       headers: {
         Authorization: uploadUrl.token,
         "Content-Type": file.type,
@@ -61,12 +74,19 @@ const uploadFile = async (user, os, file, hash) => {
         "X-Bz-Info-Author": user.username.replace(/ /g, "_"),
         "X-Bz-Info-Os": os,
       },
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+
+        store.dispatch(updateFileUploadProgress(file.name, percentCompleted));
+      },
     };
 
     const res = await axios.post(
       `https://cors-anywhere.herokuapp.com/${uploadUrl.url}`,
       file,
-      headers
+      options
     );
 
     return res;
