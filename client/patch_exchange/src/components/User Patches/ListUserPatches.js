@@ -5,7 +5,7 @@ export const ListUserPatches = ({ patches }) => {
   return (
     <>
       {patches.map((patch) => (
-        <PatchName>{patch.name}</PatchName>
+        <PatchName key={patch.id}>{patch.name}</PatchName>
       ))}
     </>
   );
