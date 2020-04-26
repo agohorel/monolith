@@ -20,8 +20,6 @@ const initialState = {
 export const b2Reducer = (state = initialState, action) => {
   const { type, payload } = action;
 
-  console.log({ type, payload });
-
   switch (type) {
     case UPLOAD_PATCH_LOADING:
     case UPLOAD_PATCH_IMG_LOADING:

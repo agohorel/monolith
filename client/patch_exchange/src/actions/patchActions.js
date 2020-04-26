@@ -6,6 +6,9 @@ import {
   ADD_PATCH_LOADING,
   ADD_PATCH_SUCCESS,
   ADD_PATCH_FAILURE,
+  SEARCH_PATCH_LOADING,
+  SEARCH_PATCH_SUCCESS,
+  SEARCH_PATCH_FAILURE,
 } from "./types";
 
 export const fetchMetadataLists = () => async (dispatch) => {
@@ -37,5 +40,21 @@ export const createPatch = (patchData) => async (dispatch) => {
   } catch (error) {
     console.error(error);
     dispatch({ type: ADD_PATCH_FAILURE, payload: error });
+  }
+};
+
+export const searchPatch = (patchName) => async (dispatch) => {
+  dispatch({ type: SEARCH_PATCH_LOADING });
+
+  try {
+    const res = await axios.get(
+      `http://localhost:5000/api/patches/${patchName}`
+    );
+
+    console.log(res.data);
+
+    dispatch({ type: SEARCH_PATCH_SUCCESS, payload: res.data });
+  } catch (error) {
+    dispatch({ type: SEARCH_PATCH_FAILURE, payload: error });
   }
 };
