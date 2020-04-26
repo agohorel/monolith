@@ -97,6 +97,14 @@ async function getPatchVersions(patchName) {
   return arr;
 }
 
+async function getUserPatches(userID) {
+  return db("users as u")
+    .select("p.name", "p.image_url")
+    .join("user_patches as up", { "u.id": "up.user_fk" })
+    .join("patches as p", { "up.patch_fk": "p.id" })
+    .where({ "u.id": userID });
+}
+
 async function getPatch(patchName) {
   const details = await getPatchDetails(patchName);
   const operatingSystems = await getPatchOperatingSystems(patchName);
@@ -225,4 +233,5 @@ module.exports = {
   getPatchVersions,
   listPatchMetadata,
   createPatch,
+  getUserPatches,
 };

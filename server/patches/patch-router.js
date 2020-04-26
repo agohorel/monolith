@@ -114,4 +114,19 @@ router.post("/add-patch", async (req, res) => {
   }
 });
 
+//// * GET USER PATCHES * ////
+// accepts querystring ?userID=id
+router.get("/", async (req, res) => {
+  try {
+    const patches = await db.getUserPatches(req.query.userID);
+
+    res.status(200).json({ msg: "Fetched your patches successfully", patches });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ err: "Error retrieving your patches, try again in a moment" });
+  }
+});
+
 module.exports = router;
