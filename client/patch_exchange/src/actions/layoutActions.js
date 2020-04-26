@@ -1,9 +1,5 @@
-import { SIDEBAR_OPEN, SIDEBAR_CLOSE } from "./types";
+import { SIDEBAR_TOGGLE } from "./types";
 
-export const openSidebar = () => dispatch => {
-  dispatch({ type: SIDEBAR_OPEN });
-};
-
-export const closeSidebar = () => dispatch => {
-  dispatch({ type: SIDEBAR_CLOSE });
+export const toggleSidebar = () => (dispatch) => {
+  dispatch({ type: SIDEBAR_TOGGLE });
 };

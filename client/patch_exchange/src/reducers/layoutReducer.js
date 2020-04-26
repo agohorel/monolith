@@ -1,22 +1,17 @@
-import { SIDEBAR_OPEN, SIDEBAR_CLOSE } from "../actions/types";
+import { SIDEBAR_TOGGLE } from "../actions/types";
 
 const initialState = {
-  isSidebarOpen: false,
+  isSidebarOpen: true,
 };
 
 export const layoutReducer = (state = initialState, action) => {
   const { type } = action;
 
   switch (type) {
-    case SIDEBAR_OPEN:
+    case SIDEBAR_TOGGLE:
       return {
         ...state,
-        isSidebarOpen: true,
-      };
-    case SIDEBAR_CLOSE:
-      return {
-        ...state,
-        isSidebarOpen: false,
+        isSidebarOpen: !state.isSidebarOpen,
       };
     default:
       return state;

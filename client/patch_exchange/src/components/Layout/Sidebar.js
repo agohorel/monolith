@@ -3,20 +3,16 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import { openSidebar, closeSidebar } from "../../actions/layoutActions";
+import { toggleSidebar } from "../../actions/layoutActions";
 
 import logo from "../../assets/logo.png";
 import colors from "../../constants/colors";
 import measurements from "../../constants/measurements";
 import timings from "../../constants/timings";
 
-const Sidebar = ({ isSidebarOpen, openSidebar, closeSidebar }) => {
+const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   return (
-    <Drawer
-      onMouseEnter={openSidebar}
-      onMouseLeave={closeSidebar}
-      isSidebarOpen={isSidebarOpen}
-    >
+    <Drawer onClick={toggleSidebar} isSidebarOpen={isSidebarOpen}>
       <LogoHeader>
         <Logo src={logo}></Logo>
         <Title isSidebarOpen={isSidebarOpen}>patch.exchange</Title>
@@ -37,7 +33,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { openSidebar, closeSidebar })(Sidebar);
+export default connect(mapStateToProps, { toggleSidebar })(Sidebar);
 
 const Drawer = styled.div`
   transition: ${(props) =>
