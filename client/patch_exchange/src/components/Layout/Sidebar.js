@@ -23,36 +23,33 @@ const Sidebar = ({ isSidebarOpen, openSidebar, closeSidebar }) => {
       </LogoHeader>
 
       <Nav isSidebarOpen={isSidebarOpen}>
-        <NavLink to="/add-patch">patches</NavLink>
-        <NavLink>feed</NavLink>
-        <NavLink>inbox</NavLink>
-        <NavLink>library</NavLink>
-        <NavLink>uploads</NavLink>
+        <NavLink to="/add-patch">upload</NavLink>
+        <NavLink to="/search">search</NavLink>
       </Nav>
     </Drawer>
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    isSidebarOpen: state.layout.isSidebarOpen
+    isSidebarOpen: state.layout.isSidebarOpen,
   };
 };
 
 export default connect(mapStateToProps, { openSidebar, closeSidebar })(Sidebar);
 
 const Drawer = styled.div`
-  transition: ${props =>
+  transition: ${(props) =>
     props.isSidebarOpen
       ? `${timings.sidebarAnimation} ease-in width, ${timings.sidebarAnimation} ease-in padding`
       : `${timings.sidebarAnimation} ${timings.sidebarAnimation} ease-out width, ${timings.sidebarAnimation} ${timings.sidebarAnimation} ease-out padding`};
-  width: ${props =>
+  width: ${(props) =>
     props.isSidebarOpen
       ? `${measurements.sidebarWidthOpen}`
       : `${measurements.sidebarWidthClosed}`};
   background-color: ${colors.darkgrey};
   display: inline-block;
-  padding: ${props => (props.isSidebarOpen ? "2rem" : "1rem")};
+  padding: ${(props) => (props.isSidebarOpen ? "2rem" : "1rem")};
   height: 100vh;
   position: fixed;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25);
@@ -69,22 +66,22 @@ const Logo = styled.img`
 
 const Title = styled.h1`
   font-size: 3rem;
-  transition: ${props =>
+  transition: ${(props) =>
     props.isSidebarOpen
       ? `${timings.sidebarAnimation} ${timings.sidebarAnimation} ease-out opacity`
       : `${timings.sidebarAnimation} ease-in opacity`};
-  opacity: ${props => (props.isSidebarOpen ? 1 : 0)};
+  opacity: ${(props) => (props.isSidebarOpen ? 1 : 0)};
 `;
 
 const Nav = styled.nav`
   display: flex;
   flex-direction: column;
   margin-top: 4rem;
-  transition: ${props =>
+  transition: ${(props) =>
     props.isSidebarOpen
       ? `${timings.sidebarAnimation} ${timings.sidebarAnimation} ease-out opacity`
       : `${timings.sidebarAnimation} ease-in opacity`};
-  opacity: ${props => (props.isSidebarOpen ? 1 : 0)};
+  opacity: ${(props) => (props.isSidebarOpen ? 1 : 0)};
 `;
 
 const NavLink = styled(Link)`

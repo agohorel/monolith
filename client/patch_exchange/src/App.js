@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import AuthForm from "./components/Forms/AuthForm";
 import AddPatch from "./pages/AddPatch";
+import SearchPatches from "./pages/Search";
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
         </Route>
         <Route path="/add-patch">
           <AddPatch></AddPatch>
+        </Route>
+        <Route path="/search">
+          <SearchPatches></SearchPatches>
         </Route>
       </Layout>
     </Router>
