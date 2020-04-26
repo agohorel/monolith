@@ -12,8 +12,8 @@ import timings from "../../constants/timings";
 
 const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   return (
-    <Drawer onClick={toggleSidebar} isSidebarOpen={isSidebarOpen}>
-      <LogoHeader>
+    <Drawer isSidebarOpen={isSidebarOpen}>
+      <LogoHeader onClick={toggleSidebar}>
         <Logo src={logo}></Logo>
         <Title isSidebarOpen={isSidebarOpen}>patch.exchange</Title>
       </LogoHeader>
