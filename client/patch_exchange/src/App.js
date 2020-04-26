@@ -5,6 +5,7 @@ import Layout from "./components/Layout/Layout";
 import AuthForm from "./components/Forms/AuthForm";
 import AddPatch from "./pages/AddPatch";
 import SearchPatches from "./pages/Search";
+import MyPatches from "./pages/MyPatches";
 
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
         </Route>
         <Route path="/search">
           <SearchPatches></SearchPatches>
+        </Route>
+        <Route path="/my-patches">
+          <MyPatches></MyPatches>
         </Route>
       </Layout>
     </Router>

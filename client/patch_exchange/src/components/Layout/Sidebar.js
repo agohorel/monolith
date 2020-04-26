@@ -25,6 +25,7 @@ const Sidebar = ({ isSidebarOpen, openSidebar, closeSidebar }) => {
       <Nav isSidebarOpen={isSidebarOpen}>
         <NavLink to="/add-patch">upload</NavLink>
         <NavLink to="/search">search</NavLink>
+        <NavLink to="/my-patches">my patches</NavLink>
       </Nav>
     </Drawer>
   );
