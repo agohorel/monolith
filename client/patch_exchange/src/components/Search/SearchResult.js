@@ -11,10 +11,15 @@ import {
   Link,
 } from "./SearchStyles";
 
-const SearchResult = ({ searchResult: result }) => {
+const SearchResult = ({ searchResult: result, b2Auth }) => {
   return (
     <SearchResultContainer>
       <Title>{result.name}</Title>
+      {result.imageUrl && (
+        <img
+          src={`${b2Auth.downloadUrl}/b2api/v1/b2_download_file_by_id?fileId=${result.imageUrl}`}
+        ></img>
+      )}
 
       {result.homepageUrl && (
         <Link
@@ -86,6 +91,7 @@ const SearchResult = ({ searchResult: result }) => {
 const mapStateToProps = (state) => {
   return {
     searchResult: state.patches.searchResult,
+    b2Auth: state.auth.user.b2Auth,
   };
 };
 
