@@ -46,5 +46,3 @@ const Actions = styled.div`
   margin-top: 32px;
 `;
 
-const Row = styled.div``;
-const Filename = styled.span``;

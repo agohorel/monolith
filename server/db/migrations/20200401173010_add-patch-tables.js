@@ -1,18 +1,19 @@
 const { onUpdateTrigger } = require("../../knexfile.js");
 
-exports.up = function(knex) {
+exports.up = function (knex) {
   return knex.schema
-    .createTable("patches", tbl => {
+    .createTable("patches", (tbl) => {
       tbl.increments();
       tbl.timestamps(true, true);
       tbl.string("name", 256).notNullable();
-      tbl.string("image_url");
+      tbl.string("image_id");
       tbl.string("preview_url");
       tbl.string("repo_url");
       tbl.string("homepage_url");
+      tbl.string("description");
     })
 
-    .createTable("user_patches", tbl => {
+    .createTable("user_patches", (tbl) => {
       tbl.increments();
       tbl.timestamps(true, true);
       tbl
@@ -34,7 +35,7 @@ exports.up = function(knex) {
         .onUpdate("CASCADE");
     })
 
-    .createTable("versions", tbl => {
+    .createTable("versions", (tbl) => {
       tbl.increments();
       tbl.timestamps(true, true);
       tbl.string("version_name", 128).notNullable();
@@ -50,16 +51,13 @@ exports.up = function(knex) {
         .onUpdate("CASCADE");
     })
 
-    .createTable("release_statuses", tbl => {
+    .createTable("release_statuses", (tbl) => {
       tbl.increments();
       tbl.timestamps(true, true);
-      tbl
-        .string("release_status", 128)
-        .notNullable()
-        .unique();
+      tbl.string("release_status", 128).notNullable().unique();
     })
 
-    .createTable("version_status", tbl => {
+    .createTable("version_status", (tbl) => {
       tbl.increments();
       tbl.timestamps(true, true);
 
@@ -82,14 +80,14 @@ exports.up = function(knex) {
         .onUpdate("CASCADE");
     })
 
-    .createTable("version_files", tbl => {
+    .createTable("version_files", (tbl) => {
       tbl.increments();
       tbl.timestamps(true, true);
-      tbl.string("linux_file_url");
-      tbl.string("mac_file_url");
-      tbl.string("windows_file_url");
-      tbl.string("android_file_url");
-      tbl.string("ios_file_url");
+      tbl.string("linux_file_id");
+      tbl.string("mac_file_id");
+      tbl.string("windows_file_id");
+      tbl.string("android_file_id");
+      tbl.string("ios_file_id");
 
       tbl
         .integer("version_fk")
@@ -101,16 +99,13 @@ exports.up = function(knex) {
         .onUpdate("CASCADE");
     })
 
-    .createTable("operating_systems", tbl => {
+    .createTable("operating_systems", (tbl) => {
       tbl.increments();
       tbl.timestamps(true, true);
-      tbl
-        .string("os_name")
-        .notNullable()
-        .unique();
+      tbl.string("os_name").notNullable().unique();
     })
 
-    .createTable("patch_os", tbl => {
+    .createTable("patch_os", (tbl) => {
       tbl.increments();
       tbl.timestamps(true, true);
 
@@ -133,16 +128,13 @@ exports.up = function(knex) {
         .onUpdate("CASCADE");
     })
 
-    .createTable("platforms", tbl => {
+    .createTable("platforms", (tbl) => {
       tbl.increments();
       tbl.timestamps(true, true);
-      tbl
-        .string("platform_name", 256)
-        .notNullable()
-        .unique();
+      tbl.string("platform_name", 256).notNullable().unique();
     })
 
-    .createTable("patch_platform", tbl => {
+    .createTable("patch_platform", (tbl) => {
       tbl.increments();
       tbl.timestamps(true, true);
 
@@ -165,16 +157,13 @@ exports.up = function(knex) {
         .onUpdate("CASCADE");
     })
 
-    .createTable("categories", tbl => {
+    .createTable("categories", (tbl) => {
       tbl.increments();
       tbl.timestamps(true, true);
-      tbl
-        .string("category_name", 128)
-        .notNullable()
-        .unique();
+      tbl.string("category_name", 128).notNullable().unique();
     })
 
-    .createTable("patch_category", tbl => {
+    .createTable("patch_category", (tbl) => {
       tbl.increments();
       tbl.timestamps(true, true);
 
@@ -197,16 +186,13 @@ exports.up = function(knex) {
         .onUpdate("CASCADE");
     })
 
-    .createTable("tags", tbl => {
+    .createTable("tags", (tbl) => {
       tbl.increments();
       tbl.timestamps(true, true);
-      tbl
-        .string("tag", 128)
-        .notNullable()
-        .unique();
+      tbl.string("tag", 128).notNullable().unique();
     })
 
-    .createTable("patch_tags", tbl => {
+    .createTable("patch_tags", (tbl) => {
       tbl.increments();
       tbl.timestamps(true, true);
 
@@ -244,7 +230,7 @@ exports.up = function(knex) {
     .then(() => knex.raw(onUpdateTrigger("patch_tags")));
 };
 
-exports.down = function(knex) {
+exports.down = function (knex) {
   return knex.schema
     .dropTableIfExists("patch_tags")
     .dropTableIfExists("tags")

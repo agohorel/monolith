@@ -15,9 +15,9 @@ const SearchResult = ({ searchResult: result, b2Auth }) => {
   return (
     <SearchResultContainer>
       <Title>{result.name}</Title>
-      {result.imageUrl && (
+      {result.imageId && (
         <img
-          src={`${b2Auth.downloadUrl}/b2api/v1/b2_download_file_by_id?fileId=${result.imageUrl}`}
+          src={`${b2Auth.downloadUrl}/b2api/v1/b2_download_file_by_id?fileId=${result.imageId}`}
         ></img>
       )}
 
@@ -46,6 +46,8 @@ const SearchResult = ({ searchResult: result, b2Auth }) => {
           repo
         </Link>
       )}
+
+      {result.description && <ListItem style={{color: "#8c8c8c"}}>{result.description}</ListItem>}
 
       <ListsContainer>
         {result.platforms && (

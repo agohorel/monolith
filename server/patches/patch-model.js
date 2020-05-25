@@ -4,10 +4,11 @@ async function getPatchDetails(patchName) {
   return db("patches as p")
     .select(
       "p.name",
-      "p.image_url",
+      "p.image_id",
       "p.preview_url",
       "p.repo_url",
-      "p.homepage_url"
+      "p.homepage_url",
+      "p.description"
     )
     .where({ "p.name": patchName })
     .first();
@@ -85,11 +86,11 @@ async function getPatchVersions(patchName) {
       [item.version]: {
         status: item.releaseStatus,
         description: item.description,
-        linuxUrl: item.linux_file_url,
-        macUrl: item.mac_file_url,
-        windowsUrl: item.windows_file_url,
-        androidUrl: item.android_file_url,
-        iosUrl: item.ios_file_url,
+        linuxId: item.linux_file_id,
+        macId: item.mac_file_id,
+        windowsId: item.windows_file_id,
+        androidId: item.android_file_id,
+        iosId: item.ios_file_id,
       },
     })
   );
@@ -99,7 +100,7 @@ async function getPatchVersions(patchName) {
 
 async function getUserPatches(userID) {
   return db("users as u")
-    .select("p.name", "p.image_url", "p.id")
+    .select("p.name", "p.image_id", "p.id")
     .join("user_patches as up", { "u.id": "up.user_fk" })
     .join("patches as p", { "up.patch_fk": "p.id" })
     .where({ "u.id": userID });
@@ -115,10 +116,11 @@ async function getPatch(patchName) {
 
   return {
     name: details.name,
-    imageUrl: details.image_url,
+    imageId: details.image_id,
     previewUrl: details.preview_url,
     repoUrl: details.repo_url,
     homepageUrl: details.homepage_url,
+    description: details.description,
     operatingSystems,
     platforms,
     categories,
@@ -135,10 +137,11 @@ async function createPatch(patch) {
       const patchID = await db("patches")
         .insert({
           name: patch.name,
-          image_url: patch.image_file,
+          image_id: patch.image_file,
           preview_url: patch.preview_url,
           repo_url: patch.repo_url,
           homepage_url: patch.homepage_url,
+          description: patch.description
         })
         .returning("id")
         .transacting(trx);
@@ -154,7 +157,7 @@ async function createPatch(patch) {
         .insert({
           patch_fk: Number(patchID),
           version_name: patch.version,
-          description: patch.description,
+          description: patch.version_description,
         })
         .returning("id")
         .transacting(trx);
@@ -162,11 +165,11 @@ async function createPatch(patch) {
       await db("version_files")
         .insert({
           version_fk: Number(versionID),
-          linux_file_url: patch.linux_file,
-          mac_file_url: patch.macOS_file,
-          windows_file_url: patch.windows_file,
-          android_file_url: patch.android_file,
-          ios_file_url: patch.iOS_file,
+          linux_file_id: patch.linux_file,
+          mac_file_id: patch.macOS_file,
+          windows_file_id: patch.windows_file,
+          android_file_id: patch.android_file,
+          ios_file_id: patch.iOS_file,
         })
         .transacting(trx);
 

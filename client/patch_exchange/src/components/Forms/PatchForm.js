@@ -25,8 +25,6 @@ const PatchForm = ({
   uploadPatchImage,
   fileList,
 }) => {
-  const [image, setImage] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState({});
   const [uploaded, setUploaded] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -38,6 +36,7 @@ const PatchForm = ({
     homepage_url: "",
     version: "",
     description: "",
+    version_description: "",
     linux_file: "",
     windows_file: "",
     macOS_file: "",
@@ -113,6 +112,9 @@ const PatchForm = ({
     <Form onSubmit={handleSubmit}>
       <Label htmlFor="name">name</Label>
       <Input id="name" onChange={handleTextChange}></Input>
+      
+      <Label htmlFor="description">description</Label>
+      <Textarea id="description" onChange={handleTextChange}></Textarea>
 
       <Label htmlFor="preview_url">preview url</Label>
       <Input id="preview_url" onChange={handleTextChange}></Input>
@@ -126,8 +128,8 @@ const PatchForm = ({
       <Label htmlFor="version">version name</Label>
       <Input id="version" onChange={handleTextChange}></Input>
 
-      <Label htmlFor="description">description</Label>
-      <Textarea id="description" onChange={handleTextChange}></Textarea>
+      <Label htmlFor="version_description">version description</Label>
+      <Textarea id="version_description" onChange={handleTextChange}></Textarea>
 
       <SelectContainer>
         <PatchFormSelect
