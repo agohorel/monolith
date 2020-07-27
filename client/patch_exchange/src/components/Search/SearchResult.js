@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import styled from "styled-components";
 
 import {
   SearchResultContainer,
@@ -16,9 +17,9 @@ const SearchResult = ({ searchResult: result, b2Auth }) => {
     <SearchResultContainer>
       <Title>{result.name}</Title>
       {result.imageId && (
-        <img
+        <Image
           src={`${b2Auth.downloadUrl}/b2api/v1/b2_download_file_by_id?fileId=${result.imageId}`}
-        ></img>
+        ></Image>
       )}
 
       {result.homepageUrl && (
@@ -47,7 +48,9 @@ const SearchResult = ({ searchResult: result, b2Auth }) => {
         </Link>
       )}
 
-      {result.description && <ListItem style={{color: "#8c8c8c"}}>{result.description}</ListItem>}
+      {result.description && (
+        <ListItem style={{ color: "#8c8c8c" }}>{result.description}</ListItem>
+      )}
 
       <ListsContainer>
         {result.platforms && (
@@ -98,3 +101,7 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {})(SearchResult);
+
+const Image = styled.img`
+  object-fit: contain;
+`;
