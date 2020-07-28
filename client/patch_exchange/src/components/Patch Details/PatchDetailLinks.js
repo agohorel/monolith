@@ -23,9 +23,9 @@ export const PatchDetailLinks = ({ links }) => {
       <Links>
         {links.map((link) => {
           return (
-            <Link>
+            <Link key={link.url}>
               <Icon icon={iconMap[link.text]}></Icon>
-              <ExternalLink key={link.url} link={link}></ExternalLink>;
+              <ExternalLink link={link}></ExternalLink>;
             </Link>
           );
         })}
