@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import styled from "styled-components";
 
@@ -9,7 +10,7 @@ import {
   List,
   ListTitle,
   ListItem,
-  Link,
+  ExternalLink,
 } from "./SearchStyles";
 
 const SearchResult = ({ searchResult: result, b2Auth }) => {
@@ -17,35 +18,41 @@ const SearchResult = ({ searchResult: result, b2Auth }) => {
     <SearchResultContainer>
       <Title>{result.name}</Title>
       {result.imageId && (
-        <Image
-          src={`${b2Auth.downloadUrl}/b2api/v1/b2_download_file_by_id?fileId=${result.imageId}`}
-        ></Image>
+        <ImageLink to={`patches/${result.name}`}>
+          <Image
+            src={`${b2Auth.downloadUrl}/b2api/v1/b2_download_file_by_id?fileId=${result.imageId}`}
+          ></Image>
+        </ImageLink>
       )}
 
       {result.homepageUrl && (
-        <Link
+        <ExternalLink
           href={result.homepageUrl}
           target="_blank"
           rel="noreferrer noopener"
         >
           homepage
-        </Link>
+        </ExternalLink>
       )}
 
       {result.previewUrl && (
-        <Link
+        <ExternalLink
           href={result.previewUrl}
           target="_blank"
           rel="noreferrer noopener"
         >
           preview
-        </Link>
+        </ExternalLink>
       )}
 
       {result.repoUrl && (
-        <Link href={result.repoUrl} target="_blank" rel="noreferrer noopener">
+        <ExternalLink
+          href={result.repoUrl}
+          target="_blank"
+          rel="noreferrer noopener"
+        >
           repo
-        </Link>
+        </ExternalLink>
       )}
 
       {result.description && (
@@ -102,6 +109,16 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {})(SearchResult);
 
+const ImageLink = styled(Link)`
+  display: flex;
+  justify-content: center;
+
+  :hover img {
+    opacity: 0.5;
+  }
+`;
+
 const Image = styled.img`
+  width: 25%;
   object-fit: contain;
 `;

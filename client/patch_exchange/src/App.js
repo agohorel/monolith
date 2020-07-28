@@ -6,6 +6,7 @@ import AuthForm from "./components/Forms/AuthForm";
 import AddPatch from "./pages/AddPatch";
 import SearchPatches from "./pages/Search";
 import MyPatches from "./pages/MyPatches";
+import PatchDetails from "./pages/PatchDetails";
 
 function App() {
   return (
@@ -25,6 +26,9 @@ function App() {
         </Route>
         <Route path="/my-patches">
           <MyPatches></MyPatches>
+        </Route>
+        <Route path="/patches/:name">
+          <PatchDetails></PatchDetails>
         </Route>
       </Layout>
     </Router>

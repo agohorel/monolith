@@ -8,7 +8,7 @@ import { fetchUserPatches } from "../actions/patchActions";
 const MyPatches = ({ fetchUserPatches, userPatches, userID }) => {
   useEffect(() => {
     fetchUserPatches(userID);
-  }, []);
+  }, [fetchUserPatches, userID]);
 
   return <ListUserPatches patches={userPatches}></ListUserPatches>;
 };

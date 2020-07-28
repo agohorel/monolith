@@ -32,7 +32,7 @@ export const ListItem = styled.p`
   font-size: 1.8rem;
 `;
 
-export const Link = styled.a`
+export const ExternalLink = styled.a`
   font-size: 1.8rem;
   text-decoration: none;
   color: ${colors.offwhite};
