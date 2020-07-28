@@ -25,7 +25,7 @@ export const PatchDetailLinks = ({ links }) => {
           return (
             <Link key={link.url}>
               <Icon icon={iconMap[link.text]}></Icon>
-              <ExternalLink link={link}></ExternalLink>;
+              <ExternalLink link={link}></ExternalLink>
             </Link>
           );
         })}
