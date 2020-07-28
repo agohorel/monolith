@@ -58,7 +58,6 @@ const getBucketId = async (auth, bucketType) => {
 };
 
 const uploadFile = async (user, os, file, hash) => {
-  console.log(os);
   try {
     const uploadUrl = await getUploadUrl(user.b2Auth, os);
 

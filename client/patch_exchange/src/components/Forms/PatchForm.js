@@ -29,6 +29,7 @@ const PatchForm = ({
 
   const [formData, setFormData] = useState({
     user_id: user?.id,
+    user_name: user?.username,
     name: "",
     image_file: "",
     preview_url: "",
@@ -92,8 +93,8 @@ const PatchForm = ({
     e.preventDefault();
 
     for (const file of fileList) {
-      if (file.image) {
-        await uploadPatchImage(file.image, user);
+      if (file.type === "image") {
+        await uploadPatchImage(file, user);
       } else {
         await uploadPatch(file, user);
       }
@@ -104,7 +105,7 @@ const PatchForm = ({
 
   useEffect(() => {
     if (uploaded) {
-      // createPatch(formData);
+      createPatch(formData);
     }
   }, [uploaded, createPatch, formData]);
 
@@ -112,7 +113,7 @@ const PatchForm = ({
     <Form onSubmit={handleSubmit}>
       <Label htmlFor="name">name</Label>
       <Input id="name" onChange={handleTextChange}></Input>
-      
+
       <Label htmlFor="description">description</Label>
       <Textarea id="description" onChange={handleTextChange}></Textarea>
 

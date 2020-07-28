@@ -4,6 +4,8 @@ async function getPatchDetails(patchName) {
   return db("patches as p")
     .select(
       "p.name",
+      "p.author_id",
+      "p.author_name",
       "p.image_id",
       "p.preview_url",
       "p.repo_url",
@@ -116,6 +118,8 @@ async function getPatch(patchName) {
 
   return {
     name: details.name,
+    authorId: details.author_id,
+    authorName: details.author_name,
     imageId: details.image_id,
     previewUrl: details.preview_url,
     repoUrl: details.repo_url,
@@ -141,7 +145,8 @@ async function createPatch(patch) {
           preview_url: patch.preview_url,
           repo_url: patch.repo_url,
           homepage_url: patch.homepage_url,
-          description: patch.description
+          description: patch.description,
+          author_id: patch.user_id,
         })
         .returning("id")
         .transacting(trx);

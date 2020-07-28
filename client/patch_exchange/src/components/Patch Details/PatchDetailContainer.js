@@ -8,6 +8,8 @@ import { PatchDetailLinks } from "./PatchDetailLinks";
 
 import { getPatchByName } from "../../actions/patchActions";
 
+import colors from "../../constants/colors";
+
 const PatchDetailContainer = ({ patch, b2Auth, getPatchByName, location }) => {
   const { pathname: patchName } = useLocation();
   const links = [
@@ -20,10 +22,13 @@ const PatchDetailContainer = ({ patch, b2Auth, getPatchByName, location }) => {
     getPatchByName(patchName);
   }, [getPatchByName, patchName]);
 
+  console.log(patch);
+
   if (patch.imageId) {
     return (
       <Container>
         <Title>{patch?.name}</Title>
+        <Author>{`by ${patch?.authorName}`}</Author>
         <Image
           src={`${b2Auth.downloadUrl}/b2api/v1/b2_download_file_by_id?fileId=${patch?.imageId}`}
         ></Image>
@@ -60,6 +65,12 @@ const Container = styled.main`
 const Title = styled.h1`
   grid-column-start: span 2;
   font-size: 5rem;
+  color: ${colors.offwhite};
+`;
+
+const Author = styled.h3`
+  grid-column-start: span 2;
+  font-size: 2rem;
 `;
 
 const Image = styled.img`

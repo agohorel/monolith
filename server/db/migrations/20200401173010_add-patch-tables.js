@@ -6,6 +6,8 @@ exports.up = function (knex) {
       tbl.increments();
       tbl.timestamps(true, true);
       tbl.string("name", 256).notNullable();
+      tbl.integer("author_id").unsigned().notNullable();
+      tbl.string("author_name").notNullable();
       tbl.string("image_id");
       tbl.string("preview_url");
       tbl.string("repo_url");
