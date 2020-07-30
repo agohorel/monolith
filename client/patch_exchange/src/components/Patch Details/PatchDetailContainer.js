@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import { PatchDetailList } from "./PatchDetailList";
 import { PatchDetailLinks } from "./PatchDetailLinks";
+import { PatchDetailVersions } from "./PatchDetailVersions";
 
 import { getPatchByName } from "../../actions/patchActions";
 
@@ -39,6 +40,7 @@ const PatchDetailContainer = ({ patch, b2Auth, getPatchByName, location }) => {
             items={patch.operatingSystems}
           ></PatchDetailList>
           <PatchDetailList title="tags" items={patch.tags}></PatchDetailList>
+          <PatchDetailVersions patch={patch}></PatchDetailVersions>
         </div>
         <Description>{patch?.description}</Description>
       </Container>
