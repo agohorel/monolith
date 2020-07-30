@@ -70,30 +70,34 @@ async function getPatchTags(patchName) {
 
 async function getPatchVersions(patchName) {
   const arr = [];
-  const data = await db("patches as p")
-    .select(
-      "v.version_name as version",
-      "v.description",
-      "vf.*",
-      "rs.release_status as releaseStatus"
-    )
-    .join("versions as v", { "p.id": "v.patch_fk" })
-    .join("version_status as vs", { "v.id": "vs.version_fk" })
-    .join("version_files as vf", { "v.id": "vf.version_fk" })
-    .join("release_statuses as rs", { "vs.status_fk": "rs.id" })
+
+  const [{ id: patchID }] = await db("patches as p")
+    .select("id")
     .where({ "p.name": patchName });
+
+  const data = await db("versions as v")
+    .select("*")
+    .join("version_files as vf", {
+      "vf.id": "v.id",
+    })
+    .join("version_status as vs", {
+      "vs.id": "v.id",
+    })
+    .join("release_statuses as rs", { "rs.id": "vs.id" })
+    .where({
+      "v.patch_fk": patchID,
+    });
 
   data.forEach((item) =>
     arr.push({
-      [item.version]: {
-        status: item.releaseStatus,
-        description: item.description,
-        linuxId: item.linux_file_id,
-        macId: item.mac_file_id,
-        windowsId: item.windows_file_id,
-        androidId: item.android_file_id,
-        iosId: item.ios_file_id,
-      },
+      version: item.version_name,
+      status: item.release_status,
+      description: item.description,
+      linuxId: item.linux_file_id,
+      macId: item.mac_file_id,
+      windowsId: item.windows_file_id,
+      androidId: item.android_file_id,
+      iosId: item.ios_file_id,
     })
   );
 
