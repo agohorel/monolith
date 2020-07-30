@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import colors from "../../constants/colors";
@@ -12,9 +13,15 @@ export const ListUserPatches = ({ patches }) => {
         <Patch key={patch.id}>
           <PatchName>{patch.name}</PatchName>
           <ButtonContainer>
-            <Button>view</Button>
-            <Button>edit</Button>
-            <Button>delete</Button>
+            <Link to={`/patches/${patch.name}`}>
+              <Button>view</Button>
+            </Link>
+            <Link to="#">
+              <Button>edit</Button>
+            </Link>
+            <Link to="#">
+              <Button>delete</Button>
+            </Link>
           </ButtonContainer>
         </Patch>
       ))}
@@ -30,7 +37,7 @@ const Patch = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  button:not(:last-of-type) {
+  a:not(:last-of-type) {
     margin-right: 2rem;
   }
 `;
