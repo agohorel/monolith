@@ -41,7 +41,7 @@ const VersionName = styled.p`
 `;
 
 const VersionDescription = styled.p`
-  font-size: 2rem;
+  font-size: 1.1rem;
 `;
 
 const VersionStatus = styled.p`

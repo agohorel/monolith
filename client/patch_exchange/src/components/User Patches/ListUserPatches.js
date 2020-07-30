@@ -34,6 +34,10 @@ const Patch = styled.div`
   justify-content: space-between;
   background-color: ${colors.midgrey};
   padding: 2rem;
+
+  :not(:last-child) {
+    margin-bottom: 2rem;
+  }
 `;
 
 const ButtonContainer = styled.div`

@@ -62,6 +62,7 @@ export default connect(mapStateToProps, { getPatchByName })(
 const Container = styled.main`
   display: grid;
   grid-template-columns: 2fr 1fr;
+  grid-gap: 2rem;
 `;
 
 const Title = styled.h1`
@@ -77,10 +78,13 @@ const Author = styled.h3`
 
 const Image = styled.img`
   width: 100%;
-  padding: 10% 25%;
+  height: 60rem;
+  object-fit: cover;
+  object-position: center;
 `;
 
 const Description = styled.p`
   grid-column-start: 1;
   font-size: 1.4rem;
+  color: ${colors.offwhite};
 `;
