@@ -10,7 +10,8 @@ async function getPatchDetails(patchName) {
       "p.preview_url",
       "p.repo_url",
       "p.homepage_url",
-      "p.description"
+      "p.description",
+      "p.id"
     )
     .where({ "p.name": patchName })
     .first();
@@ -98,6 +99,7 @@ async function getPatchVersions(patchName) {
       windowsId: item.windows_file_id,
       androidId: item.android_file_id,
       iosId: item.ios_file_id,
+      id: item.id,
     })
   );
 
@@ -236,6 +238,51 @@ async function listPatchMetadata(table, ...selection) {
   return await db(table).select(...selection);
 }
 
+async function deletePatch(patchName) {
+  try {
+    const { id } = await getPatchDetails(patchName);
+    const versions = await getPatchVersions(patchName);
+
+    await db.transaction(async (trx) => {
+      for (const version of versions) {
+        await db("versions")
+          .where({ patch_fk: version.id })
+          .delete()
+          .transacting(trx);
+
+        await db("version_status")
+          .where({ version_fk: version.id })
+          .delete()
+          .transacting(trx);
+
+        await db("version_files")
+          .where({ version_fk: version.id })
+          .delete()
+          .transacting(trx);
+      }
+
+      await db("patch_os").where({ patch_fk: id }).delete().transacting(trx);
+      await db("patch_platform")
+        .where({ patch_fk: id })
+        .delete()
+        .transacting(trx);
+      await db("patch_category")
+        .where({ patch_fk: id })
+        .delete()
+        .transacting(trx);
+      await db("patch_tags").where({ patch_fk: id }).delete().transacting(trx);
+      await db("user_patches")
+        .where({ patch_fk: id })
+        .delete()
+        .transacting(trx);
+      await db("patches").where({ id }).delete().transacting(trx);
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+}
+
 module.exports = {
   getPatch,
   getPatchDetails,
@@ -247,4 +294,5 @@ module.exports = {
   listPatchMetadata,
   createPatch,
   getUserPatches,
+  deletePatch,
 };

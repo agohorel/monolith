@@ -114,6 +114,63 @@ router.post("/add-patch", async (req, res) => {
   }
 });
 
+// router.put("/:patchName", async (req, res) => {
+//   try {
+//     await db.updatePatch(req.params.patchName, req.body);
+//     res.status(204).json({ msg: "Successfully updated patch" });
+//   } catch (error) {
+//     res.status(500).json({ msg: "Failed to update patch" });
+//   }
+// });
+
+router.delete("/:patchName", async (req, res) => {
+  try {
+    await db.deletePatch(req.params.patchName);
+    res.status(200).json({ msg: "Successfully deleted patch" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Failed to delete patch" });
+  }
+});
+
+//// * PATCH VERSION CRUD ROUTES * ////
+
+// router.get("/:patchName/versions", async (req, res) => {
+//   try {
+//     const patch = await db.getPatchVersions(req.params.patchName);
+//     res.status(200).json(patch);
+//   } catch (error) {
+//     res.status(500).json({ msg: "Failed to retrieve patch version" });
+//   }
+// });
+
+// router.post("/:patchName/versions", async (req, res) => {
+//   try {
+//     await db.addPatchVersion(req.params.patchName, req.body);
+//     res.status(201).json({ msg: "Successfully created patch version" });
+//   } catch (error) {
+//     res.status(500).json({ msg: "Failed to create patch version" });
+//   }
+// });
+
+// router.put("/:patchName/versions", async (req, res) => {
+//   try {
+//     await db.updatePatchVersion(req.params.patchName, req.body);
+//     res.status(201).json({ msg: "Successfully updated patch version" });
+//   } catch (error) {
+//     res.status(500).json({ msg: "Failed to update patch version" });
+//   }
+// });
+
+// router.delete("/:patchName/versions", async (req, res) => {
+//   try {
+//     await db.deletePatchVersion(req.params.patchName);
+//     res.status(200).json({ msg: "Successfully deleted patch version" });
+//   } catch (error) {
+//     res.status(500).json({ msg: "Failed to delete patch version" });
+//   }
+// });
+
 //// * GET USER PATCHES * ////
 // accepts querystring ?userID=id
 router.get("/", async (req, res) => {
