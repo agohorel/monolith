@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 import { register, login } from "../../actions/authActions";
 
@@ -7,23 +8,25 @@ import { Form, Label, Input } from "./FormStyles";
 import { Button } from "../Button/Button";
 
 const AuthForm = ({ type, register, login }) => {
+  const history = useHistory();
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
-    password: ""
+    password: "",
   });
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (type === "register") {
-      register(formData);
+      register(formData, history);
     } else if (type === "login") {
-      login(formData);
+      login(formData, history);
     }
   };
 

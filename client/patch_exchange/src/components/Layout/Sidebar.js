@@ -1,16 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 
 import { toggleSidebar } from "../../actions/layoutActions";
+import { logout } from "../../actions/authActions";
 
 import logo from "../../assets/logo.png";
 import colors from "../../constants/colors";
 import measurements from "../../constants/measurements";
 import timings from "../../constants/timings";
 
-const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
+const Sidebar = ({ isSidebarOpen, toggleSidebar, logout, user }) => {
+  const history = useHistory();
+
   return (
     <Drawer isSidebarOpen={isSidebarOpen}>
       <LogoHeader onClick={toggleSidebar}>
@@ -22,6 +25,10 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
         <NavLink to="/add-patch">upload</NavLink>
         <NavLink to="/search">search</NavLink>
         <NavLink to="/my-patches">my patches</NavLink>
+
+        {user && <NavLink onClick={() => logout(history)}>log out</NavLink>}
+
+        {!user && <NavLink to="/login">log in</NavLink>}
       </Nav>
     </Drawer>
   );
@@ -30,10 +37,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
 const mapStateToProps = (state) => {
   return {
     isSidebarOpen: state.layout.isSidebarOpen,
+    user: state.auth.user,
   };
 };
 
-export default connect(mapStateToProps, { toggleSidebar })(Sidebar);
+export default connect(mapStateToProps, { toggleSidebar, logout })(Sidebar);
 
 const Drawer = styled.div`
   transition: ${(props) =>

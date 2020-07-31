@@ -5,6 +5,8 @@ import {
   LOGIN_LOADING,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
+  LOGOUT_SUCCESS,
+  LOGOUT_FAILURE,
 } from "../actions/types.js";
 
 const initialState = {
@@ -37,6 +39,16 @@ export const authReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         user: null,
+        errors: payload,
+      };
+    case LOGOUT_SUCCESS:
+      return {
+        ...state,
+        user: null,
+      };
+    case LOGOUT_FAILURE:
+      return {
+        ...state,
         errors: payload,
       };
     default:
