@@ -7,6 +7,7 @@ import AddPatch from "./pages/AddPatch";
 import SearchPatches from "./pages/Search";
 import MyPatches from "./pages/MyPatches";
 import PatchDetails from "./pages/PatchDetails";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
@@ -18,18 +19,12 @@ function App() {
         <Route path="/login">
           <AuthForm type="login"></AuthForm>
         </Route>
-        <Route path="/add-patch">
-          <AddPatch></AddPatch>
-        </Route>
-        <Route path="/search">
-          <SearchPatches></SearchPatches>
-        </Route>
-        <Route path="/my-patches">
-          <MyPatches></MyPatches>
-        </Route>
         <Route path="/patches/:name">
           <PatchDetails></PatchDetails>
         </Route>
+        <PrivateRoute path="/my-patches" component={MyPatches}></PrivateRoute>
+        <PrivateRoute path="/add-patch" component={AddPatch}></PrivateRoute>
+        <PrivateRoute path="/search" component={SearchPatches}></PrivateRoute>
       </Layout>
     </Router>
   );

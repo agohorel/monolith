@@ -151,7 +151,7 @@ async function createPatch(patch) {
           homepage_url: patch.homepage_url,
           description: patch.description,
           author_id: patch.user_id,
-          author_name: patch.user_name
+          author_name: patch.user_name,
         })
         .returning("id")
         .transacting(trx);
