@@ -123,6 +123,7 @@ async function getPatch(patchName) {
   const versions = await getPatchVersions(patchName);
 
   return {
+    id: details.id,
     name: details.name,
     authorId: details.author_id,
     authorName: details.author_name,
