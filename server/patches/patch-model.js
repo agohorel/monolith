@@ -1,6 +1,6 @@
 const db = require("../db/connections.js");
 
-async function getPatchDetails(patchName) {
+async function getPatchDetails(filter) {
   return db("patches as p")
     .select(
       "p.name",
@@ -13,68 +13,63 @@ async function getPatchDetails(patchName) {
       "p.description",
       "p.id"
     )
-    .where({ "p.name": patchName })
-    .first();
+    .where(filter);
 }
 
-async function getPatchOperatingSystems(patchName) {
+async function getPatchOperatingSystems(patchID) {
   const arr = [];
   const data = await db("patches as p")
     .select("os.os_name as os")
     .join("patch_os as pos", { "pos.patch_fk": "p.id" })
     .join("operating_systems as os", { "os.id": "pos.os_fk" })
-    .where({ "p.name": patchName });
+    .where({ "p.id": patchID });
 
   data.forEach((item) => arr.push(item.os));
 
   return arr;
 }
 
-async function getPatchPlatforms(patchName) {
+async function getPatchPlatforms(patchID) {
   const arr = [];
   const data = await db("patches as p")
     .select("platforms.platform_name as platform")
     .join("patch_platform as pp", { "pp.patch_fk": "p.id" })
     .join("platforms", { "platforms.id": "pp.platform_fk" })
-    .where({ "p.name": patchName });
+    .where({ "p.id": patchID });
 
   data.forEach((item) => arr.push(item.platform));
 
   return arr;
 }
 
-async function getPatchCategories(patchName) {
+async function getPatchCategories(patchID) {
   const arr = [];
   const data = await db("patches as p")
     .select("c.category_name as category")
     .join("patch_category as pc", { "pc.patch_fk": "p.id" })
     .join("categories as c", { "c.id": "pc.category_fk" })
-    .where({ "p.name": patchName });
+    .where({ "p.id": patchID });
 
   data.forEach((item) => arr.push(item.category));
 
   return arr;
 }
 
-async function getPatchTags(patchName) {
+async function getPatchTags(patchID) {
   const arr = [];
   const data = await db("patches as p")
     .select("t.tag as tag")
     .join("patch_tags as pt", { "pt.patch_fk": "p.id" })
     .join("tags as t", { "t.id": "pt.tag_fk" })
-    .where({ "p.name": patchName });
+    .where({ "p.id": patchID });
 
   data.forEach((item) => arr.push(item.tag));
 
   return arr;
 }
 
-async function getPatchVersions(patchName) {
+async function getPatchVersions(patchID) {
   const arr = [];
-
-  const [{ id: patchID }] = await db("patches as p")
-    .select("id")
-    .where({ "p.name": patchName });
 
   const data = await db("versions as v")
     .select("*")
@@ -114,15 +109,49 @@ async function getUserPatches(userID) {
     .where({ "u.id": userID });
 }
 
-async function getPatch(patchName) {
-  const details = await getPatchDetails(patchName);
-  const operatingSystems = await getPatchOperatingSystems(patchName);
-  const platforms = await getPatchPlatforms(patchName);
-  const categories = await getPatchCategories(patchName);
-  const tags = await getPatchTags(patchName);
-  const versions = await getPatchVersions(patchName);
+async function searchPatches(patchName) {
+  const searchResults = [];
+  const patches = await getPatchDetails({ "p.name": patchName });
 
-  return {
+  for (const patch of patches) {
+    const operatingSystems = await getPatchOperatingSystems(patch.id);
+    const platforms = await getPatchPlatforms(patch.id);
+    const categories = await getPatchCategories(patch.id);
+    const tags = await getPatchTags(patch.id);
+    const versions = await getPatchVersions(patch.id);
+
+    const patchDetails = {
+      id: patch.id,
+      name: patch.name,
+      authorId: patch.author_id,
+      authorName: patch.author_name,
+      imageId: patch.image_id,
+      previewUrl: patch.preview_url,
+      repoUrl: patch.repo_url,
+      homepageUrl: patch.homepage_url,
+      description: patch.description,
+      operatingSystems,
+      platforms,
+      categories,
+      tags,
+      versions,
+    };
+
+    searchResults.push(patchDetails);
+  }
+
+  return searchResults;
+}
+
+async function getPatchById(patchID) {
+  const [details] = await getPatchDetails({ "p.id": patchID });
+  const operatingSystems = await getPatchOperatingSystems(patchID);
+  const platforms = await getPatchPlatforms(patchID);
+  const categories = await getPatchCategories(patchID);
+  const tags = await getPatchTags(patchID);
+  const versions = await getPatchVersions(patchID);
+
+  const patchDetails = {
     id: details.id,
     name: details.name,
     authorId: details.author_id,
@@ -138,11 +167,11 @@ async function getPatch(patchName) {
     tags,
     versions,
   };
+
+  return patchDetails;
 }
 
 async function createPatch(patch) {
-  console.log(patch);
-
   try {
     await db.transaction(async (trx) => {
       const patchID = await db("patches")
@@ -285,7 +314,8 @@ async function deletePatch(patchName) {
 }
 
 module.exports = {
-  getPatch,
+  searchPatches,
+  getPatchById,
   getPatchDetails,
   getPatchOperatingSystems,
   getPatchPlatforms,

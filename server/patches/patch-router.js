@@ -90,15 +90,28 @@ router.get("/metadata-lists", async (req, res) => {
 
 //// * PATCH CRUD ROUTES * ////
 
-router.get("/:patchName", async (req, res) => {
+// GET patch by ID
+router.get("/:patchID", async (req, res) => {
   try {
-    const patch = await db.getPatch(req.params.patchName);
+    const patch = await db.getPatchById(req.params.patchID);
+    res.status(200).json(patch);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ err: "Error retrieving patch, please try again in a moment" });
+  }
+});
 
+// SEARCH patch by NAME
+router.get("/:patchName/search", async (req, res) => {
+  try {
+    const patch = await db.searchPatches(req.params.patchName);
     res.status(200).json(patch);
   } catch (error) {
     res
       .status(500)
-      .json({ err: "Error retrieving patch, please try again in a moment" });
+      .json({ err: "Error searching for patch, please try again in a moment" });
   }
 });
 
