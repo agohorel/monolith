@@ -12,7 +12,7 @@ const releaseBadgeColors = {
 export const PatchDetailVersions = ({ patch }) => {
   return (
     <Container>
-      {patch.versions.map((version, idx) => {
+      {patch?.versions?.map((version, idx) => {
         return (
           <Version key={idx}>
             <VersionName>{version.version}</VersionName>

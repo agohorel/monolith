@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import styled from "styled-components";
 
@@ -7,12 +6,11 @@ import { PatchDetailList } from "./PatchDetailList";
 import { PatchDetailLinks } from "./PatchDetailLinks";
 import { PatchDetailVersions } from "./PatchDetailVersions";
 
-import { getPatchByName } from "../../actions/patchActions";
+import { getPatchById } from "../../actions/patchActions";
 
 import colors from "../../constants/colors";
 
-const PatchDetailContainer = ({ patch, b2Auth, getPatchByName, location }) => {
-  const { pathname: patchName } = useLocation();
+const PatchDetailContainer = ({ patch, b2Auth, getPatchById }) => {
   const links = [
     { text: "homepage", url: patch.homepageUrl },
     { text: "preview", url: patch.previewUrl },
@@ -20,44 +18,38 @@ const PatchDetailContainer = ({ patch, b2Auth, getPatchByName, location }) => {
   ];
 
   useEffect(() => {
-    getPatchByName(patchName);
-  }, [getPatchByName, patchName]);
+    getPatchById(patch.id);
+  }, [getPatchById]);
 
-  console.log(patch);
-
-  if (patch.imageId) {
-    return (
-      <Container>
-        <Title>{patch?.name}</Title>
-        <Author>{`by ${patch?.authorName}`}</Author>
-        <Image
-          src={`${b2Auth.downloadUrl}/b2api/v1/b2_download_file_by_id?fileId=${patch?.imageId}`}
-        ></Image>
-        <div>
-          <PatchDetailLinks title="links" links={links}></PatchDetailLinks>
-          <PatchDetailList
-            title="OS"
-            items={patch.operatingSystems}
-          ></PatchDetailList>
-          <PatchDetailList title="tags" items={patch.tags}></PatchDetailList>
-          <PatchDetailVersions patch={patch}></PatchDetailVersions>
-        </div>
-        <Description>{patch?.description}</Description>
-      </Container>
-    );
-  } else return null;
+  return (
+    <Container>
+      <Title>{patch?.name}</Title>
+      <Author>{`by ${patch?.authorName}`}</Author>
+      <Image
+        src={`${b2Auth?.downloadUrl}/b2api/v1/b2_download_file_by_id?fileId=${patch?.imageId}`}
+      ></Image>
+      <div>
+        <PatchDetailLinks title="links" links={links}></PatchDetailLinks>
+        <PatchDetailList
+          title="OS"
+          items={patch.operatingSystems}
+        ></PatchDetailList>
+        <PatchDetailList title="tags" items={patch.tags}></PatchDetailList>
+        <PatchDetailVersions patch={patch}></PatchDetailVersions>
+      </div>
+      <Description>{patch?.description}</Description>
+    </Container>
+  );
 };
 
 const mapStateToProps = (state) => {
   return {
-    b2Auth: state.auth.user.b2Auth,
+    b2Auth: state.auth?.user?.b2Auth,
     patch: state.patches.selectedPatch,
   };
 };
 
-export default connect(mapStateToProps, { getPatchByName })(
-  PatchDetailContainer
-);
+export default connect(mapStateToProps, { getPatchById })(PatchDetailContainer);
 
 const Container = styled.main`
   display: grid;
