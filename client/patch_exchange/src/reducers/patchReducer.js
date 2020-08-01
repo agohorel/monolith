@@ -11,9 +11,10 @@ import {
   FETCH_USER_PATCHES_LOADING,
   FETCH_USER_PATCHES_SUCCESS,
   FETCH_USER_PATCHES_FAILURE,
-  GET_PATCH_BY_NAME_LOADING,
-  GET_PATCH_BY_NAME_SUCCESS,
-  GET_PATCH_BY_NAME_FAILURE,
+  GET_PATCH_BY_ID_LOADING,
+  GET_PATCH_BY_ID_SUCCESS,
+  GET_PATCH_BY_ID_FAILURE,
+  SELECT_PATCH,
 } from "../actions/types";
 
 const initialState = {
@@ -33,7 +34,7 @@ export const patchReducer = (state = initialState, action) => {
     case ADD_PATCH_LOADING:
     case SEARCH_PATCH_LOADING:
     case FETCH_USER_PATCHES_LOADING:
-    case GET_PATCH_BY_NAME_LOADING:
+    case GET_PATCH_BY_ID_LOADING:
       return {
         ...state,
         errors: null,
@@ -62,7 +63,14 @@ export const patchReducer = (state = initialState, action) => {
         userPatches: payload,
       };
 
-    case GET_PATCH_BY_NAME_SUCCESS:
+    case GET_PATCH_BY_ID_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        selectedPatch: payload,
+      };
+
+    case SELECT_PATCH:
       return {
         ...state,
         selectedPatch: payload,
@@ -72,7 +80,7 @@ export const patchReducer = (state = initialState, action) => {
     case ADD_PATCH_FAILURE:
     case SEARCH_PATCH_FAILURE:
     case FETCH_USER_PATCHES_FAILURE:
-    case GET_PATCH_BY_NAME_FAILURE:
+    case GET_PATCH_BY_ID_FAILURE:
       return {
         ...state,
         loading: false,

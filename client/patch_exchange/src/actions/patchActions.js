@@ -12,9 +12,10 @@ import {
   FETCH_USER_PATCHES_LOADING,
   FETCH_USER_PATCHES_SUCCESS,
   FETCH_USER_PATCHES_FAILURE,
-  GET_PATCH_BY_NAME_LOADING,
-  GET_PATCH_BY_NAME_SUCCESS,
-  GET_PATCH_BY_NAME_FAILURE,
+  GET_PATCH_BY_ID_LOADING,
+  GET_PATCH_BY_ID_SUCCESS,
+  GET_PATCH_BY_ID_FAILURE,
+  SELECT_PATCH,
 } from "./types";
 
 export const fetchMetadataLists = () => async (dispatch) => {
@@ -54,7 +55,7 @@ export const searchPatch = (patchName) => async (dispatch) => {
 
   try {
     const res = await axios.get(
-      `http://localhost:5000/api/patches/${patchName}`
+      `http://localhost:5000/api/patches/${patchName}/search`
     );
 
     console.log(res.data);
@@ -78,12 +79,16 @@ export const fetchUserPatches = (userID) => async (dispatch) => {
   }
 };
 
-export const getPatchByName = (patchName) => async (dispatch) => {
-  dispatch({ type: GET_PATCH_BY_NAME_LOADING });
+export const getPatchById = (patchID) => async (dispatch) => {
+  dispatch({ type: GET_PATCH_BY_ID_LOADING });
   try {
-    const res = await axios.get(`http://localhost:5000/api${patchName}`);
-    dispatch({ type: GET_PATCH_BY_NAME_SUCCESS, payload: res.data });
+    const res = await axios.get(`http://localhost:5000/api/patches/${patchID}`);
+    dispatch({ type: GET_PATCH_BY_ID_SUCCESS, payload: res.data });
   } catch (error) {
-    dispatch({ type: GET_PATCH_BY_NAME_FAILURE, payload: error });
+    dispatch({ type: GET_PATCH_BY_ID_FAILURE, payload: error });
   }
+};
+
+export const selectPatch = (patch) => (dispatch) => {
+  dispatch({ type: SELECT_PATCH, payload: patch });
 };
