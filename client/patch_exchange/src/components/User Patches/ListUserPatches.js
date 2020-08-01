@@ -1,25 +1,34 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import colors from "../../constants/colors";
 
 import { Button } from "../Button/Button";
+import { selectPatch } from "../../actions/patchActions";
 
-export const ListUserPatches = ({ patches }) => {
+const ListUserPatches = ({ patches, selectPatch }) => {
+  const handleSelect = (patch) => {
+    selectPatch(patch);
+  };
+
   return (
     <>
       {patches.map((patch) => (
-        <Patch key={patch.id}>
+        <Patch key={patch.id} onClick={() => handleSelect(patch)}>
           <PatchName>{patch.name}</PatchName>
           <ButtonContainer>
             <Link to={`/patches/${patch.name}`}>
               <Button>view</Button>
             </Link>
-            <Link to="#">
+            <Link to="/#">
+              <Button>add version</Button>
+            </Link>
+            <Link to="/#">
               <Button>edit</Button>
             </Link>
-            <Link to="#">
+            <Link to="/#">
               <Button>delete</Button>
             </Link>
           </ButtonContainer>
@@ -28,6 +37,8 @@ export const ListUserPatches = ({ patches }) => {
     </>
   );
 };
+
+export default connect(null, { selectPatch })(ListUserPatches);
 
 const Patch = styled.div`
   display: flex;

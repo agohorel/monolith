@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 
-import { ListUserPatches } from "../components/User Patches/ListUserPatches";
+import ListUserPatches from "../components/User Patches/ListUserPatches";
 
 import { fetchUserPatches } from "../actions/patchActions";
 
