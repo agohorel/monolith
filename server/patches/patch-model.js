@@ -264,6 +264,84 @@ async function createPatch(patch) {
   }
 }
 
+async function updatePatch(id, patch) {
+  try {
+    await db.transaction(async (trx) => {
+      const [patchID] = await db("patches")
+        .update({
+          name: patch.name,
+          image_id: patch.image_file,
+          preview_url: patch.preview_url,
+          repo_url: patch.repo_url,
+          homepage_url: patch.homepage_url,
+          description: patch.description,
+          author_id: patch.user_id,
+          author_name: patch.user_name,
+        })
+        .where({ id: Number(id) })
+        .returning("id")
+        .transacting(trx);
+
+      await db("patch_os")
+        .delete()
+        .where({ patch_fk: patchID })
+        .transacting(trx);
+
+      for (const os of patch.operatingSystems) {
+        await db("patch_os")
+          .insert({
+            patch_fk: patchID,
+            os_fk: Number(os),
+          })
+          .transacting(trx);
+      }
+
+      await db("patch_category")
+        .delete()
+        .where({ patch_fk: patchID })
+        .transacting(trx);
+
+      for (const category of patch.categories) {
+        await db("patch_category")
+          .insert({
+            patch_fk: patchID,
+            category_fk: Number(category),
+          })
+          .where({ patch_fk: patchID })
+          .transacting(trx);
+      }
+
+      await db("patch_tags").delete().transacting(trx);
+
+      for (const tag of patch.tags) {
+        await db("patch_tags")
+          .insert({
+            patch_fk: patchID,
+            tag_fk: Number(tag),
+          })
+          .transacting(trx);
+      }
+
+      await db("patch_platform")
+        .delete()
+        .where({ patch_fk: patchID })
+        .transacting(trx);
+
+      for (const platform of patch.platforms) {
+        await db("patch_platform")
+          .insert({
+            patch_fk: patchID,
+            platform_fk: Number(platform),
+          })
+          .transacting(trx);
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+}
+
 async function listPatchMetadata(table, ...selection) {
   return await db(table).select(...selection);
 }
@@ -326,4 +404,5 @@ module.exports = {
   createPatch,
   getUserPatches,
   deletePatch,
+  updatePatch,
 };

@@ -127,14 +127,15 @@ router.post("/add-patch", async (req, res) => {
   }
 });
 
-// router.put("/:patchName", async (req, res) => {
-//   try {
-//     await db.updatePatch(req.params.patchName, req.body);
-//     res.status(204).json({ msg: "Successfully updated patch" });
-//   } catch (error) {
-//     res.status(500).json({ msg: "Failed to update patch" });
-//   }
-// });
+router.put("/:patchID", async (req, res) => {
+  try {
+    await db.updatePatch(req.params.patchID, req.body);
+    res.status(204).json({ msg: "Successfully updated patch" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Failed to update patch" });
+  }
+});
 
 router.delete("/:patchName", async (req, res) => {
   try {
