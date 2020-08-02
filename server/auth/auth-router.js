@@ -1,7 +1,7 @@
 const db = require("../db/dbModel.js");
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
-const { generateToken } = require("../utils/tokenUtils.js");
+const { generateToken, hashPassword } = require("../utils/authUtils.js");
 const { createKey, getClientAuth } = require("../b2/b2.js");
 const {
   validateRegisterCreds,
@@ -10,7 +10,7 @@ const {
 
 router.post("/register", validateRegisterCreds, async (req, res) => {
   const data = req.body;
-  const hash = bcrypt.hashSync(data.password, 12);
+  const hash = hashPassword(data.password);
   data.password = hash;
   try {
     const user = await db.insert("users", data, "id");
