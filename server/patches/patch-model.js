@@ -74,12 +74,12 @@ async function getPatchVersions(patchID) {
   const data = await db("versions as v")
     .select("*")
     .join("version_files as vf", {
-      "vf.id": "v.id",
+      "vf.version_fk": "v.id",
     })
     .join("version_status as vs", {
-      "vs.id": "v.id",
+      "vs.version_fk": "v.id",
     })
-    .join("release_statuses as rs", { "rs.id": "vs.id" })
+    .join("release_statuses as rs", { "rs.id": "vs.status_fk" })
     .where({
       "v.patch_fk": patchID,
     });
@@ -94,7 +94,7 @@ async function getPatchVersions(patchID) {
       windowsId: item.windows_file_id,
       androidId: item.android_file_id,
       iosId: item.ios_file_id,
-      id: item.id,
+      id: item.version_fk,
     })
   );
 
@@ -395,6 +395,37 @@ async function deletePatch(patchName) {
   }
 }
 
+async function createPatchVersion(patchID, patchVersion) {
+  await db.transaction(async (trx) => {
+    const [versionID] = await db("versions")
+      .insert({
+        patch_fk: Number(patchID),
+        version_name: patchVersion.version,
+        description: patchVersion.version_description,
+      })
+      .returning("id")
+      .transacting(trx);
+
+    await db("version_files")
+      .insert({
+        version_fk: Number(versionID),
+        linux_file_id: patchVersion.linux_file,
+        mac_file_id: patchVersion.macOS_file,
+        windows_file_id: patchVersion.windows_file,
+        android_file_id: patchVersion.android_file,
+        ios_file_id: patchVersion.iOS_file,
+      })
+      .transacting(trx);
+
+    await db("version_status")
+      .insert({
+        version_fk: Number(versionID),
+        status_fk: Number(patchVersion.releaseStatuses),
+      })
+      .transacting(trx);
+  });
+}
+
 module.exports = {
   searchPatches,
   getPatchById,
@@ -409,4 +440,5 @@ module.exports = {
   getUserPatches,
   deletePatch,
   updatePatch,
+  createPatchVersion,
 };

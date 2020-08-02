@@ -158,14 +158,15 @@ router.delete("/:patchName", async (req, res) => {
 //   }
 // });
 
-// router.post("/:patchName/versions", async (req, res) => {
-//   try {
-//     await db.addPatchVersion(req.params.patchName, req.body);
-//     res.status(201).json({ msg: "Successfully created patch version" });
-//   } catch (error) {
-//     res.status(500).json({ msg: "Failed to create patch version" });
-//   }
-// });
+router.post("/:patchID/versions", async (req, res) => {
+  try {
+    await db.createPatchVersion(req.params.patchID, req.body);
+    res.status(201).json({ msg: "Successfully created patch version" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Failed to create patch version" });
+  }
+});
 
 // router.put("/:patchName/versions", async (req, res) => {
 //   try {
