@@ -37,7 +37,7 @@ router.post("/login", validateLoginCreds, async (req, res) => {
       const b2Key = await createKey(user.username);
       const { applicationKey, ...b2Auth } = await getClientAuth(b2Key);
       res
-        .status(201)
+        .status(200)
         .json({ username: user.username, id: user.id, token, b2Auth });
     } else {
       res.status(401).json({ err: "Invalid credentials" });
