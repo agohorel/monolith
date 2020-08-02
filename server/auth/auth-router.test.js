@@ -9,6 +9,14 @@ const { generateToken, hashPassword } = require("../utils/authUtils");
 const server = require("../api/server");
 const request = require("supertest");
 
+const password = "quake777!";
+const testUser = {
+  username: "johndoe",
+  password: hashPassword(password),
+  email: "jdoe@email.net",
+  bio: "hello world",
+};
+
 afterAll((done) => {
   dbModel.closeConnection();
   done();
@@ -38,14 +46,6 @@ describe("User Registration tests", () => {
   beforeEach(async () => {
     await db("users").delete();
   });
-
-  const password = "quake777!";
-  const testUser = {
-    username: "johndoe",
-    password: hashPassword(password),
-    email: "jdoe@email.net",
-    bio: "hello world",
-  };
 
   it("Should add a user to the database", async () => {
     await dbModel.insert("users", testUser, "id");
@@ -77,5 +77,62 @@ describe("User Registration tests", () => {
         ])
       );
     });
+
+    it("Responds with a patchex token", async () => {
+      const response = await request(server)
+        .post("/api/auth/register")
+        .send({
+          ...testUser,
+          password,
+        });
+
+      expect(response.body.token).toBeDefined();
+    });
+
+    it("Responds with a b2 token", async () => {
+      const response = await request(server)
+        .post("/api/auth/register")
+        .send({
+          ...testUser,
+          password,
+        });
+
+      expect(response.body.b2Auth.token).toBeDefined();
+    });
+  });
+});
+
+describe("User Login tests", () => {
+  it("Responds with a 200", async () => {
+    const response = await request(server)
+      .post("/api/auth/login")
+      .send({
+        ...testUser,
+        password,
+      });
+
+    expect(response.status).toEqual(200);
+  });
+
+  it("Responds with a patchex token", async () => {
+    const response = await request(server)
+      .post("/api/auth/login")
+      .send({
+        ...testUser,
+        password,
+      });
+
+    expect(response.body.token).toBeDefined();
+  });
+
+  it("Responds with a b2 token", async () => {
+    const response = await request(server)
+      .post("/api/auth/login")
+      .send({
+        ...testUser,
+        password,
+      });
+
+    expect(response.body.b2Auth.token).toBeDefined();
   });
 });
