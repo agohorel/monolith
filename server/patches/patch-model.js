@@ -282,63 +282,67 @@ async function updatePatch(id, patch) {
         .returning("id")
         .transacting(trx);
 
-      await db("patch_os")
-        .delete()
-        .where({ patch_fk: patchID })
-        .transacting(trx);
+      await updatePatchMetadataList(
+        "patch_os",
+        patchID,
+        { patch_fk: patchID },
+        trx,
+        patch.operatingSystems,
+        "os_fk"
+      );
 
-      for (const os of patch.operatingSystems) {
-        await db("patch_os")
-          .insert({
-            patch_fk: patchID,
-            os_fk: Number(os),
-          })
-          .transacting(trx);
-      }
+      await updatePatchMetadataList(
+        "patch_category",
+        patchID,
+        {
+          patch_fk: patchID,
+        },
+        trx,
+        patch.categories,
+        "category_fk"
+      );
 
-      await db("patch_category")
-        .delete()
-        .where({ patch_fk: patchID })
-        .transacting(trx);
+      await updatePatchMetadataList(
+        "patch_tags",
+        patchID,
+        { patch_fk: patchID },
+        trx,
+        patch.tags,
+        "tag_fk"
+      );
 
-      for (const category of patch.categories) {
-        await db("patch_category")
-          .insert({
-            patch_fk: patchID,
-            category_fk: Number(category),
-          })
-          .where({ patch_fk: patchID })
-          .transacting(trx);
-      }
-
-      await db("patch_tags").delete().transacting(trx);
-
-      for (const tag of patch.tags) {
-        await db("patch_tags")
-          .insert({
-            patch_fk: patchID,
-            tag_fk: Number(tag),
-          })
-          .transacting(trx);
-      }
-
-      await db("patch_platform")
-        .delete()
-        .where({ patch_fk: patchID })
-        .transacting(trx);
-
-      for (const platform of patch.platforms) {
-        await db("patch_platform")
-          .insert({
-            patch_fk: patchID,
-            platform_fk: Number(platform),
-          })
-          .transacting(trx);
-      }
+      await updatePatchMetadataList(
+        "patch_platform",
+        patchID,
+        { patch_fk: patchID },
+        trx,
+        patch.platforms,
+        "platform_fk"
+      );
     });
   } catch (error) {
     console.error(error);
     throw new Error(error);
+  }
+}
+
+async function updatePatchMetadataList(
+  table,
+  patchID,
+  filter,
+  transaction,
+  metadataList,
+  foreignKeyName
+) {
+  await db(table).delete().where(filter).transacting(transaction);
+
+  for (const listItem of metadataList) {
+    await db(table)
+      .insert({
+        patch_fk: patchID,
+        [foreignKeyName]: Number(listItem),
+      })
+      .transacting(transaction);
   }
 }
 
