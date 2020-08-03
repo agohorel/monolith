@@ -366,6 +366,22 @@ async function updatePatchVersion(versionID, patchVersion) {
   });
 }
 
+async function deletePatchVersion(versionID) {
+  await db.transaction(async (trx) => {
+    await db("version_status")
+      .delete()
+      .where({ version_fk: versionID })
+      .transacting(trx);
+
+    await db("version_files")
+      .delete()
+      .where({ version_fk: versionID })
+      .transacting(trx);
+
+    await db("versions").delete().where({ id: versionID }).transacting(trx);
+  });
+}
+
 ////////////////////////////////
 ///          UTILS           ///
 ////////////////////////////////
@@ -520,4 +536,5 @@ module.exports = {
   createPatchVersion,
   getPatchVersionById,
   updatePatchVersion,
+  deletePatchVersion,
 };

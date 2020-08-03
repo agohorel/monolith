@@ -187,14 +187,15 @@ router.put("/versions/:versionID", async (req, res) => {
   }
 });
 
-// router.delete("/:patchName/versions", async (req, res) => {
-//   try {
-//     await db.deletePatchVersion(req.params.patchName);
-//     res.status(200).json({ msg: "Successfully deleted patch version" });
-//   } catch (error) {
-//     res.status(500).json({ msg: "Failed to delete patch version" });
-//   }
-// });
+router.delete("/versions/:versionID", async (req, res) => {
+  try {
+    await db.deletePatchVersion(req.params.versionID);
+    res.status(200).json({ msg: "Successfully deleted patch version" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Failed to delete patch version" });
+  }
+});
 
 //// * GET USER PATCHES * ////
 // accepts querystring ?userID=id
