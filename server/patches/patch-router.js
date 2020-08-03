@@ -149,14 +149,23 @@ router.delete("/:patchName", async (req, res) => {
 
 //// * PATCH VERSION CRUD ROUTES * ////
 
-// router.get("/:patchName/versions", async (req, res) => {
-//   try {
-//     const patch = await db.getPatchVersions(req.params.patchName);
-//     res.status(200).json(patch);
-//   } catch (error) {
-//     res.status(500).json({ msg: "Failed to retrieve patch version" });
-//   }
-// });
+router.get("/:patchID/versions", async (req, res) => {
+  try {
+    const patch = await db.getPatchVersions(req.params.patchID);
+    res.status(200).json(patch);
+  } catch (error) {
+    res.status(500).json({ msg: "Failed to retrieve patch version" });
+  }
+});
+
+router.get("/versions/:versionID", async (req, res) => {
+  try {
+    const patch = await db.getPatchVersionById(req.params.versionID);
+    res.status(200).json(patch);
+  } catch (error) {
+    res.status(500).json({ msg: "Failed to retrieve patch version" });
+  }
+});
 
 router.post("/:patchID/versions", async (req, res) => {
   try {
@@ -168,14 +177,15 @@ router.post("/:patchID/versions", async (req, res) => {
   }
 });
 
-// router.put("/:patchName/versions", async (req, res) => {
-//   try {
-//     await db.updatePatchVersion(req.params.patchName, req.body);
-//     res.status(201).json({ msg: "Successfully updated patch version" });
-//   } catch (error) {
-//     res.status(500).json({ msg: "Failed to update patch version" });
-//   }
-// });
+router.put("/versions/:versionID", async (req, res) => {
+  try {
+    await db.updatePatchVersion(req.params.versionID, req.body);
+    res.status(201).json({ msg: "Successfully updated patch version" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Failed to update patch version" });
+  }
+});
 
 // router.delete("/:patchName/versions", async (req, res) => {
 //   try {

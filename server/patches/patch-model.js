@@ -301,6 +301,71 @@ async function createPatchVersion(patchID, patchVersion) {
   });
 }
 
+async function getPatchVersionById(versionID) {
+  const arr = [];
+
+  const data = await db("versions as v")
+    .select("*")
+    .join("version_files as vf", {
+      "vf.version_fk": "v.id",
+    })
+    .join("version_status as vs", {
+      "vs.version_fk": "v.id",
+    })
+    .join("release_statuses as rs", { "rs.id": "vs.status_fk" })
+    .where({
+      "v.id": versionID,
+    });
+
+  data.forEach((item) =>
+    arr.push({
+      version: item.version_name,
+      status: item.release_status,
+      description: item.description,
+      linuxId: item.linux_file_id,
+      macId: item.mac_file_id,
+      windowsId: item.windows_file_id,
+      androidId: item.android_file_id,
+      iosId: item.ios_file_id,
+      id: item.version_fk,
+    })
+  );
+
+  return arr;
+}
+
+async function updatePatchVersion(versionID, patchVersion) {
+  await db.transaction(async (trx) => {
+    await db("versions")
+      .update({
+        version_name: patchVersion.version,
+        description: patchVersion.version_description,
+      })
+      .where({ id: Number(versionID) })
+      .transacting(trx);
+
+    await db("version_files")
+      .update({
+        version_fk: Number(versionID),
+        linux_file_id: patchVersion.linux_file,
+        mac_file_id: patchVersion.macOS_file,
+        windows_file_id: patchVersion.windows_file,
+        android_file_id: patchVersion.android_file,
+        ios_file_id: patchVersion.iOS_file,
+      })
+      .where({ version_fk: Number(versionID) })
+      .transacting(trx);
+
+    await db("version_status")
+      .update({
+        version_fk: Number(versionID),
+        status_fk: Number(patchVersion.releaseStatuses),
+      })
+      .where({ version_fk: versionID })
+      .transacting(trx);
+  });
+}
+
 ////////////////////////////////
 ///          UTILS           ///
 ////////////////////////////////
@@ -453,4 +518,6 @@ module.exports = {
   deletePatch,
   updatePatch,
   createPatchVersion,
+  getPatchVersionById,
+  updatePatchVersion,
 };
