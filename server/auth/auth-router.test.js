@@ -44,7 +44,7 @@ describe("Environment test", () => {
 
 describe("User Registration tests", () => {
   beforeEach(async () => {
-    await db("users").delete();
+    await db.raw("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
   });
 
   it("Should add a user to the database", async () => {
