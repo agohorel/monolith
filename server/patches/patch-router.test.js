@@ -114,9 +114,82 @@ describe("Patch CRUD route tests", () => {
   it("DELETE - should remove a patch", async () => {
     const res = await request(server).delete("/api/patches/1");
     const patch = await dbModel.findBy("patches", { id: 1 });
-  
+
     expect(res.status).toEqual(200);
     expect(patch).toBeUndefined();
+  });
+});
+
+describe("Patch Version CRUD tests", () => {
+  beforeAll(async () => {
+    await db.raw("TRUNCATE TABLE versions, patches RESTART IDENTITY CASCADE");
+    await db.migrate.latest().then(() => db.seed.run());
+  });
+
+  it("POST - Should create a patch version", async () => {
+    const version = {
+      version: "1.1",
+      version_description: "1.1 - hotfixes and perf improvements",
+      linux_file:
+        "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
+      macOS_file:
+        "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
+      windows_file:
+        "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
+      releaseStatuses: ["1"],
+    };
+    const res = await request(server)
+      .post("/api/patches/1/versions")
+      .send(version);
+
+    expect(res.status).toEqual(201);
+    expect(res.body.msg).toContain("Successfully created patch version");
+  });
+
+  it("GET - Should retrieve a patch version", async () => {
+    const res = await request(server).get("/api/patches/versions/3");
+
+    expect(res.status).toEqual(200);
+    expect(res.body.version).toBeDefined();
+    expect(res.body.description).toBeDefined();
+  });
+
+  it("PUT - Should update a patch version", async () => {
+    const versionUpdate = {
+      version: "1.3",
+      version_description:
+        "1.3 - rendering improvements and reduced input latency!",
+      linux_file:
+        "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
+      macOS_file:
+        "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
+      windows_file:
+        "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
+      releaseStatuses: ["2"],
+    };
+
+    const res = await request(server)
+      .put("/api/patches/versions/3")
+      .send(versionUpdate);
+
+    const version = await dbModel.findBy("versions", { id: 3 });
+
+    expect(res.status).toEqual(200);
+    expect(res.body.msg).toContain("Successfully updated patch version");
+    expect(version).toEqual(
+      expect.objectContaining({
+        version_name: versionUpdate.version,
+        description: versionUpdate.version_description,
+      })
+    );
+  });
+
+  it("DELETE - Should remove a patch version", async () => {
+    const res = await request(server).delete("/api/patches/versions/3");
+    const deletedItem = await dbModel.findBy("versions", { id: 3 });
+
+    expect(res.status).toEqual(200);
+    expect(deletedItem).toBeUndefined();
   });
 });
 
