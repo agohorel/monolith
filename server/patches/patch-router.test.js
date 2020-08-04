@@ -6,6 +6,13 @@ const db = require("../db/connections");
 const dbModel = require("../db/dbModel");
 const server = require("../api/server");
 const request = require("supertest");
+const {
+  categories,
+  patch,
+  updatePatchData,
+  version,
+  updateVersionData,
+} = require("./patch-router-testdata.js");
 
 afterAll((done) => {
   dbModel.closeConnection();
@@ -30,25 +37,6 @@ describe("Patch metadata list tests", () => {
   });
 
   it("Should return a valid list of all patch metadata", async () => {
-    const categories = [
-      {
-        endpoint: "/api/patches/os-list",
-        target_field: "operating_systems",
-      },
-      {
-        endpoint: "/api/patches/platform-list",
-        target_field: "platforms",
-      },
-      {
-        endpoint: "/api/patches/category-list",
-        target_field: "categories",
-      },
-      {
-        endpoint: "/api/patches/status-list",
-        target_field: "release_statuses",
-      },
-    ];
-
     for (category of categories) {
       await testMetadataRoute(category.endpoint, category.target_field);
     }
@@ -62,24 +50,6 @@ describe("Patch CRUD route tests", () => {
   });
 
   it("POST - Should create a patch", async () => {
-    const patch = {
-      user_id: 1,
-      user_name: "johndoe",
-      name: "shred12",
-      image_url: "www.image.com",
-      preview_url: "www.preview.com",
-      repo_url: "www.repo.com",
-      homepage_url: "www.homepage.com",
-      version: "1.0",
-      file_url: "www.file.com",
-      description: "1.0 release woot",
-      releaseStatuses: "1",
-      operatingSystems: ["1", "2"],
-      platforms: ["1"],
-      categories: ["2"],
-      tags: ["1", "2"],
-    };
-
     const res = await request(server)
       .post("/api/patches/add-patch")
       .send(patch);
@@ -97,15 +67,9 @@ describe("Patch CRUD route tests", () => {
   });
 
   it("PUT - should update a patch", async () => {
-    const patchData = {
-      name: "testpatch ULTIMATE EDITION",
-      operatingSystems: ["4", "5"],
-      platforms: ["1"],
-      categories: ["1"],
-      tags: ["1", "4"],
-    };
-
-    const res = await request(server).put(`/api/patches/1`).send(patchData);
+    const res = await request(server)
+      .put(`/api/patches/1`)
+      .send(updatePatchData);
 
     expect(res.status).toEqual(200);
     expect(res.body.msg).toContain("Successfully updated patch");
@@ -127,17 +91,6 @@ describe("Patch Version CRUD tests", () => {
   });
 
   it("POST - Should create a patch version", async () => {
-    const version = {
-      version: "1.1",
-      version_description: "1.1 - hotfixes and perf improvements",
-      linux_file:
-        "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
-      macOS_file:
-        "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
-      windows_file:
-        "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
-      releaseStatuses: ["1"],
-    };
     const res = await request(server)
       .post("/api/patches/1/versions")
       .send(version);
@@ -155,22 +108,9 @@ describe("Patch Version CRUD tests", () => {
   });
 
   it("PUT - Should update a patch version", async () => {
-    const versionUpdate = {
-      version: "1.3",
-      version_description:
-        "1.3 - rendering improvements and reduced input latency!",
-      linux_file:
-        "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
-      macOS_file:
-        "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
-      windows_file:
-        "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
-      releaseStatuses: ["2"],
-    };
-
     const res = await request(server)
       .put("/api/patches/versions/3")
-      .send(versionUpdate);
+      .send(updateVersionData);
 
     const version = await dbModel.findBy("versions", { id: 3 });
 
@@ -178,8 +118,8 @@ describe("Patch Version CRUD tests", () => {
     expect(res.body.msg).toContain("Successfully updated patch version");
     expect(version).toEqual(
       expect.objectContaining({
-        version_name: versionUpdate.version,
-        description: versionUpdate.version_description,
+        version_name: updateVersionData.version,
+        description: updateVersionData.version_description,
       })
     );
   });
