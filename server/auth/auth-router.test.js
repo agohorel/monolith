@@ -48,12 +48,10 @@ describe("User Registration tests", () => {
   });
 
   it("Should add a user to the database", async () => {
-    await dbModel.insert("users", testUser, "id");
-    const users = await dbModel.find("users");
+    const { id } = await dbModel.insert("users", testUser, "id");
+    const users = await dbModel.findBy("users", { id });
 
-    expect(users).toEqual(
-      expect.arrayContaining([expect.objectContaining(testUser)])
-    );
+    expect(users).toEqual(expect.objectContaining(testUser));
   });
 
   describe("User Registration via POST api/auth/register", () => {
@@ -64,17 +62,15 @@ describe("User Registration tests", () => {
           ...testUser,
           password,
         });
-      const users = await dbModel.find("users");
+      const users = await dbModel.findBy("users", { id: 1 });
 
       expect(response.status).toEqual(201);
       expect(users).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            username: testUser.username,
-            email: testUser.email,
-            bio: testUser.bio,
-          }),
-        ])
+        expect.objectContaining({
+          username: testUser.username,
+          email: testUser.email,
+          bio: testUser.bio,
+        })
       );
     });
 
