@@ -308,9 +308,7 @@ async function createPatchVersion(patchID, patchVersion) {
 }
 
 async function getPatchVersionById(versionID) {
-  const arr = [];
-
-  const data = await db("versions as v")
+  const [data] = await db("versions as v")
     .select("*")
     .join("version_files as vf", {
       "vf.version_fk": "v.id",
@@ -323,48 +321,47 @@ async function getPatchVersionById(versionID) {
       "v.id": versionID,
     });
 
-  data.forEach((item) =>
-    arr.push({
-      version: item.version_name,
-      status: item.release_status,
-      description: item.description,
-      linuxId: item.linux_file_id,
-      macId: item.mac_file_id,
-      windowsId: item.windows_file_id,
-      androidId: item.android_file_id,
-      iosId: item.ios_file_id,
-      id: item.version_fk,
-    })
-  );
+  const result = {
+    version: data.version_name,
+    status: data.release_status,
+    description: data.description,
+    linuxId: data.linux_file_id,
+    macId: data.mac_file_id,
+    windowsId: data.windows_file_id,
+    androidId: data.android_file_id,
+    iosId: data.ios_file_id,
+    id: data.version_fk,
+  };
 
-  return arr;
+  return result;
 }
 
 async function updatePatchVersion(versionID, patchVersion) {
+  versionID = Number(versionID);
   await db.transaction(async (trx) => {
     await db("versions")
       .update({
         version_name: patchVersion.version,
         description: patchVersion.version_description,
       })
-      .where({ id: Number(versionID) })
+      .where({ id: versionID })
       .transacting(trx);
 
     await db("version_files")
       .update({
-        version_fk: Number(versionID),
+        version_fk: versionID,
         linux_file_id: patchVersion.linux_file,
         mac_file_id: patchVersion.macOS_file,
         windows_file_id: patchVersion.windows_file,
         android_file_id: patchVersion.android_file,
         ios_file_id: patchVersion.iOS_file,
       })
-      .where({ version_fk: Number(versionID) })
+      .where({ version_fk: versionID })
       .transacting(trx);
 
     await db("version_status")
       .update({
-        version_fk: Number(versionID),
+        version_fk: versionID,
         status_fk: Number(patchVersion.releaseStatuses),
       })
       .where({ version_fk: versionID })
