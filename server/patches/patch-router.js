@@ -180,7 +180,7 @@ router.post("/:patchID/versions", async (req, res) => {
 router.put("/versions/:versionID", async (req, res) => {
   try {
     await db.updatePatchVersion(req.params.versionID, req.body);
-    res.status(201).json({ msg: "Successfully updated patch version" });
+    res.status(200).json({ msg: "Successfully updated patch version" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Failed to update patch version" });
