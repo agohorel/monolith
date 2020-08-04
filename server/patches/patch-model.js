@@ -221,10 +221,10 @@ async function updatePatch(id, patch) {
   }
 }
 
-async function deletePatch(patchName) {
+async function deletePatch(patchID) {
   try {
-    const { id } = await getPatchDetails(patchName);
-    const versions = await getPatchVersions(patchName);
+    patchID = Number(patchID);
+    const versions = await getPatchVersions(patchID);
 
     await db.transaction(async (trx) => {
       for (const version of versions) {
@@ -244,21 +244,27 @@ async function deletePatch(patchName) {
           .transacting(trx);
       }
 
-      await db("patch_os").where({ patch_fk: id }).delete().transacting(trx);
+      await db("patch_os")
+        .where({ patch_fk: patchID })
+        .delete()
+        .transacting(trx);
       await db("patch_platform")
-        .where({ patch_fk: id })
+        .where({ patch_fk: patchID })
         .delete()
         .transacting(trx);
       await db("patch_category")
-        .where({ patch_fk: id })
+        .where({ patch_fk: patchID })
         .delete()
         .transacting(trx);
-      await db("patch_tags").where({ patch_fk: id }).delete().transacting(trx);
+      await db("patch_tags")
+        .where({ patch_fk: patchID })
+        .delete()
+        .transacting(trx);
       await db("user_patches")
-        .where({ patch_fk: id })
+        .where({ patch_fk: patchID })
         .delete()
         .transacting(trx);
-      await db("patches").where({ id }).delete().transacting(trx);
+      await db("patches").where({ id: patchID }).delete().transacting(trx);
     });
   } catch (error) {
     console.error(error);
