@@ -12,7 +12,7 @@ import {
 import { FileUploader } from "../File Uploader/FileUploader";
 import FileList from "../File Uploader/FileList";
 import { PatchFormSelect } from "./PatchFormSelect";
-import { Form, Label, Input, Textarea, Select, Option } from "./FormStyles";
+import { Form, Label, Input, Textarea } from "./FormStyles";
 import { Button } from "../Button/Button";
 
 const PatchForm = ({
@@ -20,7 +20,6 @@ const PatchForm = ({
   fetchMetadataLists,
   createPatch,
   user,
-  uploadPatch,
   b2Response,
   uploadPatchImage,
   fileList,
@@ -47,17 +46,10 @@ const PatchForm = ({
   }, [fetchMetadataLists]);
 
   useEffect(() => {
-    if (b2Response?.contentType.includes("image")) {
-      setFormData((formData) => ({
-        ...formData,
-        image_id: b2Response?.fileId,
-      }));
-    } else {
-      setFormData((formData) => ({
-        ...formData,
-        [b2Response?.fileInfo.os]: b2Response?.fileId,
-      }));
-    }
+    setFormData((formData) => ({
+      ...formData,
+      image_id: b2Response?.fileId,
+    }));
   }, [b2Response]);
 
   const handleTextChange = (e) => {
@@ -74,21 +66,12 @@ const PatchForm = ({
     setFormData({ ...formData, [e.target.id]: [...new Set(values)] });
   };
 
-  const handleSingleDropdown = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.selectedOptions[0].id,
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     for (const file of fileList) {
       if (file.type === "image") {
         await uploadPatchImage(file, user);
-      } else {
-        await uploadPatch(file, user);
       }
     }
 
@@ -191,16 +174,6 @@ const SelectContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-`;
-
-const SelectRow = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-
-  select {
-    width: 100%;
-  }
 `;
 
 const UploadContainer = styled.div`
