@@ -7,15 +7,10 @@ import {
   fetchMetadataLists,
   createPatchVersion,
 } from "../../actions/patchActions";
-import {
-  addFile,
-  uploadPatch,
-  uploadPatchImage,
-} from "../../actions/b2Actions";
+import { addFile, uploadPatch } from "../../actions/b2Actions";
 
 import { FileUploader } from "../File Uploader/FileUploader";
 import FileList from "../File Uploader/FileList";
-import { PatchFormSelect } from "./PatchFormSelect";
 import { Form, Label, Input, Textarea, Select, Option } from "./FormStyles";
 import { Button } from "../Button/Button";
 
@@ -26,7 +21,6 @@ const VersionForm = ({
   user,
   uploadPatch,
   b2Response,
-  uploadPatchImage,
   fileList,
 }) => {
   const [uploaded, setUploaded] = useState(false);
@@ -51,31 +45,14 @@ const VersionForm = ({
   }, [fetchMetadataLists]);
 
   useEffect(() => {
-    if (b2Response?.contentType.includes("image")) {
-      setFormData((formData) => ({
-        ...formData,
-        image_file: b2Response?.fileId,
-      }));
-    } else {
-      setFormData((formData) => ({
-        ...formData,
-        [b2Response?.fileInfo.os]: b2Response?.fileId,
-      }));
-    }
+    setFormData((formData) => ({
+      ...formData,
+      [b2Response?.fileInfo.os]: b2Response?.fileId,
+    }));
   }, [b2Response]);
 
   const handleTextChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
-
-  const handleMultiDropdown = (e) => {
-    const values = [];
-    // get current selections for each input
-    document.querySelectorAll(`#${e.target.id}`).forEach((input) => {
-      values.push(input.selectedOptions[0].id);
-    });
-    // de-duplicate and append to form state
-    setFormData({ ...formData, [e.target.id]: [...new Set(values)] });
   };
 
   const handleSingleDropdown = (e) => {
@@ -89,11 +66,7 @@ const VersionForm = ({
     e.preventDefault();
 
     for (const file of fileList) {
-      if (file.type === "image") {
-        await uploadPatchImage(file, user);
-      } else {
-        await uploadPatch(file, user);
-      }
+      await uploadPatch(file, user);
     }
 
     setUploaded(true);
@@ -101,7 +74,6 @@ const VersionForm = ({
 
   useEffect(() => {
     if (uploaded) {
-      console.log(formData);
       createPatchVersion(formData);
     }
   }, [uploaded, createPatchVersion, formData]);
@@ -148,7 +120,6 @@ const VersionForm = ({
       </UploadContainer>
 
       <FileList fileList={fileList}></FileList>
-
       <Button>Add Patch</Button>
     </Form>
   );
@@ -167,7 +138,6 @@ export default connect(mapStateToProps, {
   fetchMetadataLists,
   createPatchVersion,
   uploadPatch,
-  uploadPatchImage,
   addFile,
 })(VersionForm);
 
