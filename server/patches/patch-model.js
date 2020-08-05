@@ -97,6 +97,72 @@ async function createPatch(patch) {
   }
 }
 
+async function addPatch(patch) {
+  try {
+    await db.transaction(async (trx) => {
+      const patchID = await db("patches")
+        .insert({
+          name: patch.name,
+          author_id: patch.author_id,
+          author_name: patch.author_name,
+          image_id: patch.image_id,
+          preview_url: patch.preview_url,
+          repo_url: patch.repo_url,
+          homepage_url: patch.homepage_url,
+          description: patch.description,
+        })
+        .returning("id")
+        .transacting(trx);
+
+      await db("user_patches")
+        .insert({
+          user_fk: Number(patch.author_id),
+          patch_fk: Number(patchID),
+        })
+        .transacting(trx);
+
+      await db("patch_os")
+        .insert(
+          patch.operating_systems.map((os) => ({
+            patch_fk: Number(patchID),
+            os_fk: Number(os),
+          }))
+        )
+        .transacting(trx);
+
+      await db("patch_category")
+        .insert(
+          patch.categories.map((category) => ({
+            patch_fk: Number(patchID),
+            category_fk: Number(category),
+          }))
+        )
+        .transacting(trx);
+
+      await db("patch_tags")
+        .insert(
+          patch.tags.map((tag) => ({
+            patch_fk: Number(patchID),
+            tag_fk: Number(tag),
+          }))
+        )
+        .transacting(trx);
+
+      await db("patch_platform")
+        .insert(
+          patch.platforms.map((platform) => ({
+            patch_fk: Number(patchID),
+            platform_fk: Number(platform),
+          }))
+        )
+        .transacting(trx);
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+}
+
 async function getPatchById(patchID) {
   const [details] = await getPatchDetails({ "p.id": patchID });
   const operatingSystems = await getPatchOperatingSystems(patchID);
@@ -291,17 +357,17 @@ async function createPatchVersion(patchID, patchVersion) {
       .insert({
         version_fk: Number(versionID),
         linux_file_id: patchVersion.linux_file,
-        mac_file_id: patchVersion.macOS_file,
+        mac_file_id: patchVersion.mac_file,
         windows_file_id: patchVersion.windows_file,
         android_file_id: patchVersion.android_file,
-        ios_file_id: patchVersion.iOS_file,
+        ios_file_id: patchVersion.ios_file,
       })
       .transacting(trx);
 
     await db("version_status")
       .insert({
         version_fk: Number(versionID),
-        status_fk: Number(patchVersion.releaseStatuses),
+        status_fk: Number(patchVersion.release_status),
       })
       .transacting(trx);
   });
@@ -540,4 +606,5 @@ module.exports = {
   getPatchVersionById,
   updatePatchVersion,
   deletePatchVersion,
+  addPatch,
 };
