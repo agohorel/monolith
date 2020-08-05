@@ -22,7 +22,7 @@ const ListUserPatches = ({ patches, selectPatch }) => {
             <Link to={`/patches/${patch.name}`}>
               <Button>view</Button>
             </Link>
-            <Link to="/#">
+            <Link to={`add-version/${patch.id}`}>
               <Button>add version</Button>
             </Link>
             <Link to="/#">
