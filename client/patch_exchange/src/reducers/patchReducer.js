@@ -15,6 +15,9 @@ import {
   GET_PATCH_BY_ID_SUCCESS,
   GET_PATCH_BY_ID_FAILURE,
   SELECT_PATCH,
+  ADD_VERSION_LOADING,
+  ADD_VERSION_SUCCESS,
+  ADD_VERSION_FAILURE,
 } from "../actions/types";
 
 const initialState = {
@@ -35,6 +38,7 @@ export const patchReducer = (state = initialState, action) => {
     case SEARCH_PATCH_LOADING:
     case FETCH_USER_PATCHES_LOADING:
     case GET_PATCH_BY_ID_LOADING:
+    case ADD_VERSION_LOADING:
       return {
         ...state,
         errors: null,
@@ -76,11 +80,18 @@ export const patchReducer = (state = initialState, action) => {
         selectedPatch: payload,
       };
 
+    case ADD_VERSION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
+
     case META_LIST_FAILURE:
     case ADD_PATCH_FAILURE:
     case SEARCH_PATCH_FAILURE:
     case FETCH_USER_PATCHES_FAILURE:
     case GET_PATCH_BY_ID_FAILURE:
+    case ADD_VERSION_FAILURE:
       return {
         ...state,
         loading: false,
