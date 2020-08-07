@@ -90,7 +90,7 @@ const VersionForm = ({
         <Label htmlFor="release_status">release status</Label>
         <SelectRow style={{ marginBottom: "2rem" }}>
           <Select id="release_status" onChange={handleSingleDropdown}>
-            {metadataLists.releaseStatuses?.map((releaseStatus) => {
+            {metadataLists.release_statuses?.map((releaseStatus) => {
               return (
                 <Option
                   key={releaseStatus.id}
@@ -106,7 +106,8 @@ const VersionForm = ({
       </SelectContainer>
 
       <UploadContainer>
-        {metadataLists.operatingSystems?.map((os) => {
+        {metadataLists.operating_systems?.map((os) => {
+          console.log(os);
           return (
             <FileUploader
               key={os.id}
