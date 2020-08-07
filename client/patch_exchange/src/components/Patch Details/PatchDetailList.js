@@ -9,8 +9,8 @@ export const PatchDetailList = ({ title, items }) => {
       <ListTitle>{title}</ListTitle>
       {items && (
         <List>
-          {items.map((item, idx) => {
-            return <ListItem key={`${item}${idx}`}>{item}</ListItem>;
+          {items.map((item) => {
+            return <ListItem key={item.id}>{item.name}</ListItem>;
           })}
         </List>
       )}

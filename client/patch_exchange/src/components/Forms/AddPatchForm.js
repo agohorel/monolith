@@ -23,6 +23,8 @@ const PatchForm = ({
   b2Response,
   uploadPatchImage,
   fileList,
+  patchToEdit,
+  mode,
 }) => {
   const [uploaded, setUploaded] = useState(false);
 
@@ -40,6 +42,23 @@ const PatchForm = ({
     categories: [],
     tags: [],
   });
+
+  useEffect(() => {
+    setFormData({
+      name: patchToEdit?.details?.name || "",
+      author_id: patchToEdit?.details?.author_id || user?.id,
+      author_name: patchToEdit?.details?.author_name || user?.username,
+      image_id: patchToEdit?.details?.image_id || "",
+      preview_url: patchToEdit?.details?.preview_url || "",
+      repo_url: patchToEdit?.details?.repo_url || "",
+      homepage_url: patchToEdit?.details?.homepage_url || "",
+      description: patchToEdit?.details?.description || "",
+      operating_systems: patchToEdit?.operating_systems || [],
+      platforms: patchToEdit?.platforms || [],
+      categories: patchToEdit?.categories || [],
+      tags: patchToEdit?.tags || [],
+    });
+  }, [patchToEdit]);
 
   useEffect(() => {
     fetchMetadataLists();
@@ -87,27 +106,49 @@ const PatchForm = ({
   return (
     <Form onSubmit={handleSubmit}>
       <Label htmlFor="name">name</Label>
-      <Input id="name" onChange={handleTextChange}></Input>
+      <Input
+        id="name"
+        value={formData.name}
+        onChange={handleTextChange}
+      ></Input>
 
       <Label htmlFor="description">description</Label>
-      <Textarea id="description" onChange={handleTextChange}></Textarea>
+      <Textarea
+        id="description"
+        value={formData.description}
+        onChange={handleTextChange}
+      ></Textarea>
 
       <Label htmlFor="preview_url">preview url</Label>
-      <Input id="preview_url" onChange={handleTextChange}></Input>
+      <Input
+        id="preview_url"
+        value={formData.preview_url}
+        onChange={handleTextChange}
+      ></Input>
 
       <Label htmlFor="repo_url">repo url</Label>
-      <Input id="repo_url" onChange={handleTextChange}></Input>
+      <Input
+        id="repo_url"
+        value={formData.repo_url}
+        onChange={handleTextChange}
+      ></Input>
 
       <Label htmlFor="homepage_url">homepage url</Label>
-      <Input id="homepage_url" onChange={handleTextChange}></Input>
+      <Input
+        id="homepage_url"
+        value={formData.homepage_url}
+        onChange={handleTextChange}
+      ></Input>
 
       <SelectContainer>
         <PatchFormSelect
-          category="operatingSystems"
+          category="operating_systems"
           label="os compatibility"
           itemPropertyName="os_name"
           handleChange={handleMultiDropdown}
           metadataLists={metadataLists}
+          existingForm={formData}
+          mode={mode}
         ></PatchFormSelect>
 
         <PatchFormSelect
@@ -116,6 +157,8 @@ const PatchForm = ({
           itemPropertyName="platform_name"
           handleChange={handleMultiDropdown}
           metadataLists={metadataLists}
+          existingForm={formData}
+          mode={mode}
         ></PatchFormSelect>
 
         <PatchFormSelect
@@ -124,6 +167,8 @@ const PatchForm = ({
           itemPropertyName="category_name"
           handleChange={handleMultiDropdown}
           metadataLists={metadataLists}
+          existingForm={formData}
+          mode={mode}
         ></PatchFormSelect>
 
         <PatchFormSelect
@@ -132,6 +177,8 @@ const PatchForm = ({
           itemPropertyName="tag"
           handleChange={handleMultiDropdown}
           metadataLists={metadataLists}
+          existingForm={formData}
+          mode={mode}
         ></PatchFormSelect>
       </SelectContainer>
 
@@ -158,6 +205,7 @@ const mapStateToProps = (state) => {
     user: state.auth.user,
     b2Response: state.b2.response,
     fileList: state.b2.fileList,
+    patchToEdit: state.patches.selectedPatch,
   };
 };
 

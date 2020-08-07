@@ -15,7 +15,6 @@ import {
   GET_PATCH_BY_ID_LOADING,
   GET_PATCH_BY_ID_SUCCESS,
   GET_PATCH_BY_ID_FAILURE,
-  SELECT_PATCH,
   ADD_VERSION_LOADING,
   ADD_VERSION_SUCCESS,
   ADD_VERSION_FAILURE,
@@ -106,8 +105,4 @@ export const getPatchById = (patchID) => async (dispatch) => {
   } catch (error) {
     dispatch({ type: GET_PATCH_BY_ID_FAILURE, payload: error });
   }
-};
-
-export const selectPatch = (patch) => (dispatch) => {
-  dispatch({ type: SELECT_PATCH, payload: patch });
 };

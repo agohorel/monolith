@@ -14,7 +14,6 @@ import {
   GET_PATCH_BY_ID_LOADING,
   GET_PATCH_BY_ID_SUCCESS,
   GET_PATCH_BY_ID_FAILURE,
-  SELECT_PATCH,
   ADD_VERSION_LOADING,
   ADD_VERSION_SUCCESS,
   ADD_VERSION_FAILURE,
@@ -71,12 +70,6 @@ export const patchReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        selectedPatch: payload,
-      };
-
-    case SELECT_PATCH:
-      return {
-        ...state,
         selectedPatch: payload,
       };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -13,13 +13,26 @@ export const PatchFormSelect = ({
   itemPropertyName,
   handleChange,
   metadataLists,
+  existingForm,
+  mode,
 }) => {
   const [selectCounts, setSelectCounts] = useState({
-    operatingSystems: [1],
+    operating_systems: [1],
     platforms: [1],
     categories: [1],
     tags: [1],
   });
+
+  useEffect(() => {
+    if (mode === "edit") {
+      setSelectCounts({
+        operating_systems: existingForm.operating_systems,
+        platforms: existingForm.platforms,
+        categories: existingForm.categories,
+        tags: existingForm.tags,
+      });
+    }
+  }, [existingForm]);
 
   const addSelectGroup = (e) => {
     const type = e.currentTarget.getAttribute("name");
@@ -43,22 +56,45 @@ export const PatchFormSelect = ({
     <SelectGroup>
       <Label htmlFor={category}>{label}</Label>
       <SelectRow>
-        {selectCounts[category].map((idx) => {
-          return (
-            <Select key={idx} id={category} onChange={handleChange}>
-              {metadataLists[category]?.map((item) => {
-                return (
-                  <Option
-                    key={item.id}
-                    id={item.id}
-                    value={item[itemPropertyName]}
-                  >
-                    {item[itemPropertyName]}
-                  </Option>
-                );
-              })}
-            </Select>
-          );
+        {selectCounts[category].map((cat) => {
+          if (mode === "edit") {
+            return (
+              <Select
+                key={`${cat.name}_${cat.id}`}
+                id={category}
+                onChange={handleChange}
+                value={cat.name}
+              >
+                {metadataLists[category]?.map((item) => {
+                  return (
+                    <Option
+                      key={item.id}
+                      id={item.id}
+                      value={item[itemPropertyName]}
+                    >
+                      {item[itemPropertyName]}
+                    </Option>
+                  );
+                })}
+              </Select>
+            );
+          } else {
+            return (
+              <Select key={cat} id={category} onChange={handleChange}>
+                {metadataLists[category]?.map((item) => {
+                  return (
+                    <Option
+                      key={item.id}
+                      id={item.id}
+                      value={item[itemPropertyName]}
+                    >
+                      {item[itemPropertyName]}
+                    </Option>
+                  );
+                })}
+              </Select>
+            );
+          }
         })}
         <Icon
           icon={faPlusCircle}

@@ -13,22 +13,18 @@ import {
   ExternalLink,
 } from "./SearchStyles";
 
-import { selectPatch } from "../../actions/patchActions";
+import { getPatchById } from "../../actions/patchActions";
 
-const SearchResult = ({ searchResult: results, b2Auth, selectPatch }) => {
-  const handleSelect = (patch) => {
-    selectPatch(patch);
-  };
-
+const SearchResult = ({ searchResult: results, b2Auth }) => {
   if (results.length) {
     return (
       <SearchResultContainer>
         {results.map((result) => {
           return (
-            <Result key={result.id} onClick={() => handleSelect(result)}>
+            <Result key={result.id}>
               <Title>{result.name}</Title>
               {result.imageId && (
-                <ImageLink to={`patches/${result.name}`}>
+                <ImageLink to={`patches/${result.name}/${result.id}`}>
                   <Image
                     src={`${b2Auth.downloadUrl}/b2api/v1/b2_download_file_by_id?fileId=${result.imageId}`}
                   ></Image>
@@ -76,7 +72,7 @@ const SearchResult = ({ searchResult: results, b2Auth, selectPatch }) => {
                   <List>
                     <ListTitle>platforms</ListTitle>
                     {result.platforms?.map((platform) => (
-                      <ListItem key={platform}>{platform}</ListItem>
+                      <ListItem key={platform.id}>{platform.name}</ListItem>
                     ))}
                   </List>
                 )}
@@ -85,7 +81,7 @@ const SearchResult = ({ searchResult: results, b2Auth, selectPatch }) => {
                   <List>
                     <ListTitle>categories</ListTitle>
                     {result.categories?.map((category) => (
-                      <ListItem key={category}>{category}</ListItem>
+                      <ListItem key={category.id}>{category.name}</ListItem>
                     ))}
                   </List>
                 )}
@@ -94,7 +90,7 @@ const SearchResult = ({ searchResult: results, b2Auth, selectPatch }) => {
                   <List>
                     <ListTitle>operating systems</ListTitle>
                     {result.operatingSystems?.map((os) => (
-                      <ListItem key={os}>{os}</ListItem>
+                      <ListItem key={os.id}>{os.name}</ListItem>
                     ))}
                   </List>
                 )}
@@ -103,7 +99,7 @@ const SearchResult = ({ searchResult: results, b2Auth, selectPatch }) => {
                   <List>
                     <ListTitle>tags</ListTitle>
                     {result.tags?.map((tag) => (
-                      <ListItem key={tag}>{tag}</ListItem>
+                      <ListItem key={tag.id}>{tag.name}</ListItem>
                     ))}
                   </List>
                 )}
@@ -123,7 +119,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { selectPatch })(SearchResult);
+export default connect(mapStateToProps, { getPatchById })(SearchResult);
 
 const Result = styled.div``;
 

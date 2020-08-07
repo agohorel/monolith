@@ -6,11 +6,11 @@ import styled from "styled-components";
 import colors from "../../constants/colors";
 
 import { Button } from "../Button/Button";
-import { selectPatch } from "../../actions/patchActions";
+import { getPatchById } from "../../actions/patchActions";
 
-const ListUserPatches = ({ patches, selectPatch }) => {
+const ListUserPatches = ({ patches, getPatchById }) => {
   const handleSelect = (patch) => {
-    selectPatch(patch);
+    getPatchById(patch.id);
   };
 
   return (
@@ -19,13 +19,16 @@ const ListUserPatches = ({ patches, selectPatch }) => {
         <Patch key={patch.id} onClick={() => handleSelect(patch)}>
           <PatchName>{patch.name}</PatchName>
           <ButtonContainer>
-            <Link to={`/patches/${patch.name}`}>
+            <Link to={`/patches/${patch.name}/${patch.id}`}>
               <Button>view</Button>
             </Link>
             <Link to={`add-version/${patch.id}`}>
               <Button>add version</Button>
             </Link>
-            <Link to="/#">
+            <Link
+              to={`/patches/${patch.name}/edit/${patch.id}`}
+              onClick={() => handleSelect(patch)}
+            >
               <Button>edit</Button>
             </Link>
             <Link to="/#">
@@ -38,7 +41,7 @@ const ListUserPatches = ({ patches, selectPatch }) => {
   );
 };
 
-export default connect(null, { selectPatch })(ListUserPatches);
+export default connect(null, { getPatchById })(ListUserPatches);
 
 const Patch = styled.div`
   display: flex;
