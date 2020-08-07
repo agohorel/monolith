@@ -6,14 +6,13 @@ import { getPatchById } from "../actions/patchActions";
 
 import PatchForm from "../components/Forms/AddPatchForm";
 
-const AddPatch = ({ getPatchById, patch }) => {
+const EditPatch = ({ getPatchById, patch }) => {
   const { pathname: path } = useLocation();
   const id = path.substring(path.lastIndexOf("/") + 1, path.length);
 
-  console.log(typeof id);
-
   useEffect(() => {
-    if (id) {
+    // prevent re-fetch if pre-fetched
+    if (patch?.details?.id !== Number(id)) {
       getPatchById(id);
     }
   }, []);
@@ -31,4 +30,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { getPatchById })(AddPatch);
+export default connect(mapStateToProps, { getPatchById })(EditPatch);
