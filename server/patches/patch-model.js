@@ -165,23 +165,15 @@ async function addPatch(patch) {
 
 async function getPatchById(patchID) {
   const [details] = await getPatchDetails({ "p.id": patchID });
-  const operatingSystems = await getPatchOperatingSystems(patchID);
+  const operating_systems = await getPatchOperatingSystems(patchID);
   const platforms = await getPatchPlatforms(patchID);
   const categories = await getPatchCategories(patchID);
   const tags = await getPatchTags(patchID);
   const versions = await getPatchVersions(patchID);
 
   const patchDetails = {
-    id: details.id,
-    name: details.name,
-    authorId: details.author_id,
-    authorName: details.author_name,
-    imageId: details.image_id,
-    previewUrl: details.preview_url,
-    repoUrl: details.repo_url,
-    homepageUrl: details.homepage_url,
-    description: details.description,
-    operatingSystems,
+    details,
+    operating_systems,
     platforms,
     categories,
     tags,
@@ -474,12 +466,12 @@ async function getPatchDetails(filter) {
 async function getPatchOperatingSystems(patchID) {
   const arr = [];
   const data = await db("patches as p")
-    .select("os.os_name as os")
+    .select("os.os_name as os", "os.id as id")
     .join("patch_os as pos", { "pos.patch_fk": "p.id" })
     .join("operating_systems as os", { "os.id": "pos.os_fk" })
     .where({ "p.id": patchID });
 
-  data.forEach((item) => arr.push(item.os));
+  data.forEach((item) => arr.push({ name: item.os, id: item.id }));
 
   return arr;
 }
@@ -487,12 +479,12 @@ async function getPatchOperatingSystems(patchID) {
 async function getPatchPlatforms(patchID) {
   const arr = [];
   const data = await db("patches as p")
-    .select("platforms.platform_name as platform")
+    .select("platforms.platform_name as platform", "platforms.id as id")
     .join("patch_platform as pp", { "pp.patch_fk": "p.id" })
     .join("platforms", { "platforms.id": "pp.platform_fk" })
     .where({ "p.id": patchID });
 
-  data.forEach((item) => arr.push(item.platform));
+  data.forEach((item) => arr.push({ name: item.platform, id: item.id }));
 
   return arr;
 }
@@ -500,12 +492,12 @@ async function getPatchPlatforms(patchID) {
 async function getPatchCategories(patchID) {
   const arr = [];
   const data = await db("patches as p")
-    .select("c.category_name as category")
+    .select("c.category_name as category", "c.id as id")
     .join("patch_category as pc", { "pc.patch_fk": "p.id" })
     .join("categories as c", { "c.id": "pc.category_fk" })
     .where({ "p.id": patchID });
 
-  data.forEach((item) => arr.push(item.category));
+  data.forEach((item) => arr.push({ name: item.category, id: item.id }));
 
   return arr;
 }
@@ -513,12 +505,12 @@ async function getPatchCategories(patchID) {
 async function getPatchTags(patchID) {
   const arr = [];
   const data = await db("patches as p")
-    .select("t.tag as tag")
+    .select("t.tag as tag", "t.id as id")
     .join("patch_tags as pt", { "pt.patch_fk": "p.id" })
     .join("tags as t", { "t.id": "pt.tag_fk" })
     .where({ "p.id": patchID });
 
-  data.forEach((item) => arr.push(item.tag));
+  data.forEach((item) => arr.push({ name: item.tag, id: item.id }));
 
   return arr;
 }
@@ -558,7 +550,7 @@ async function getPatchVersions(patchID) {
 
 async function getUserPatches(userID) {
   return db("users as u")
-    .select("p.name", "p.image_id", "p.id")
+    .select("p.*")
     .join("user_patches as up", { "u.id": "up.user_fk" })
     .join("patches as p", { "up.patch_fk": "p.id" })
     .where({ "u.id": userID });

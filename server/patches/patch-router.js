@@ -7,7 +7,8 @@ router.get("/os-list", async (req, res) => {
   try {
     const operating_systems = await db.listPatchMetadata(
       "operating_systems as os",
-      "os.os_name"
+      "os.os_name",
+      "os.id"
     );
     res.status(200).json({ operating_systems });
   } catch (error) {
@@ -19,7 +20,8 @@ router.get("/platform-list", async (req, res) => {
   try {
     const platforms = await db.listPatchMetadata(
       "platforms as p",
-      "p.platform_name"
+      "p.platform_name",
+      "p.id"
     );
     res.status(200).json({ platforms });
   } catch (error) {
@@ -31,7 +33,8 @@ router.get("/category-list", async (req, res) => {
   try {
     const categories = await db.listPatchMetadata(
       "categories as c",
-      "c.category_name"
+      "c.category_name",
+      "c.id"
     );
     res.status(200).json({ categories });
   } catch (error) {
@@ -43,7 +46,8 @@ router.get("/status-list", async (req, res) => {
   try {
     const release_statuses = await db.listPatchMetadata(
       "release_statuses as rs",
-      "rs.release_status"
+      "rs.release_status",
+      "rs.id"
     );
     res.status(200).json({ release_statuses });
   } catch (error) {
@@ -53,7 +57,7 @@ router.get("/status-list", async (req, res) => {
 
 router.get("/metadata-lists", async (req, res) => {
   try {
-    const operatingSystems = await db.listPatchMetadata(
+    const operating_systems = await db.listPatchMetadata(
       "operating_systems as os",
       "os.os_name",
       "os.id"
@@ -69,7 +73,7 @@ router.get("/metadata-lists", async (req, res) => {
       "c.category_name",
       "c.id"
     );
-    const releaseStatuses = await db.listPatchMetadata(
+    const release_statuses = await db.listPatchMetadata(
       "release_statuses as rs",
       "rs.release_status",
       "rs.id"
@@ -77,10 +81,10 @@ router.get("/metadata-lists", async (req, res) => {
     const tags = await db.listPatchMetadata("tags as t", "t.tag", "t.id");
 
     res.status(200).json({
-      operatingSystems,
+      operating_systems,
+      release_statuses,
       platforms,
       categories,
-      releaseStatuses,
       tags,
     });
   } catch (error) {
