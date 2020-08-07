@@ -223,7 +223,7 @@ async function updatePatch(id, patch) {
       const [patchID] = await db("patches")
         .update({
           name: patch.name,
-          image_id: patch.image_file,
+          image_id: patch.image_id,
           preview_url: patch.preview_url,
           repo_url: patch.repo_url,
           homepage_url: patch.homepage_url,
@@ -240,7 +240,7 @@ async function updatePatch(id, patch) {
         patchID,
         { patch_fk: patchID },
         trx,
-        patch.operatingSystems,
+        patch.operating_systems,
         "os_fk"
       );
 
@@ -570,7 +570,7 @@ async function updatePatchMetadataList(
     await db(table)
       .insert({
         patch_fk: patchID,
-        [foreignKeyName]: Number(listItem),
+        [foreignKeyName]: Number(listItem.id),
       })
       .transacting(transaction);
   }
