@@ -10,6 +10,8 @@ const AddPatch = ({ getPatchById, patch }) => {
   const { pathname: path } = useLocation();
   const id = path.substring(path.lastIndexOf("/") + 1, path.length);
 
+  console.log(typeof id);
+
   useEffect(() => {
     if (id) {
       getPatchById(id);
@@ -18,7 +20,7 @@ const AddPatch = ({ getPatchById, patch }) => {
 
   return (
     <>
-      <PatchForm existingForm={patch} mode="edit"></PatchForm>
+      <PatchForm existingForm={patch} patchID={id} mode="edit"></PatchForm>
     </>
   );
 };

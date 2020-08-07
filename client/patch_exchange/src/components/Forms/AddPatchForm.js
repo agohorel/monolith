@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 
-import { fetchMetadataLists, createPatch } from "../../actions/patchActions";
+import {
+  fetchMetadataLists,
+  createPatch,
+  updatePatch,
+} from "../../actions/patchActions";
 import {
   addFile,
   uploadPatch,
@@ -25,6 +29,8 @@ const PatchForm = ({
   fileList,
   patchToEdit,
   mode,
+  updatePatch,
+  patchID,
 }) => {
   const [uploaded, setUploaded] = useState(false);
 
@@ -99,9 +105,13 @@ const PatchForm = ({
 
   useEffect(() => {
     if (uploaded) {
-      createPatch(formData);
+      if (mode === "edit") {
+        updatePatch(patchID, formData);
+      } else {
+        createPatch(formData);
+      }
     }
-  }, [uploaded, createPatch, formData]);
+  }, [uploaded, createPatch, updatePatch, formData]);
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -194,7 +204,7 @@ const PatchForm = ({
 
       <FileList fileList={fileList}></FileList>
 
-      <Button>Add Patch</Button>
+      <Button>{mode === "edit" ? "Update Patch" : "Add Patch"}</Button>
     </Form>
   );
 };
@@ -215,6 +225,7 @@ export default connect(mapStateToProps, {
   uploadPatch,
   uploadPatchImage,
   addFile,
+  updatePatch,
 })(PatchForm);
 
 const SelectContainer = styled.div`

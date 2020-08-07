@@ -18,6 +18,9 @@ import {
   ADD_VERSION_LOADING,
   ADD_VERSION_SUCCESS,
   ADD_VERSION_FAILURE,
+  UPDATE_PATCH_LOADING,
+  UPDATE_PATCH_SUCCESS,
+  UPDATE_PATCH_FAILURE,
 } from "./types";
 
 export const fetchMetadataLists = () => async (dispatch) => {
@@ -61,7 +64,6 @@ export const createPatchVersion = (versionData) => async (dispatch) => {
       versionData
     );
 
-    console.log(res);
     dispatch({ type: ADD_VERSION_SUCCESS, payload: res.data });
   } catch (error) {
     dispatch({ type: ADD_VERSION_FAILURE, payload: error });
@@ -75,8 +77,6 @@ export const searchPatch = (patchName) => async (dispatch) => {
     const res = await axios.get(
       `http://localhost:5000/api/patches/${patchName}/search`
     );
-
-    console.log(res.data);
 
     dispatch({ type: SEARCH_PATCH_SUCCESS, payload: res.data });
   } catch (error) {
@@ -104,5 +104,18 @@ export const getPatchById = (patchID) => async (dispatch) => {
     dispatch({ type: GET_PATCH_BY_ID_SUCCESS, payload: res.data });
   } catch (error) {
     dispatch({ type: GET_PATCH_BY_ID_FAILURE, payload: error });
+  }
+};
+
+export const updatePatch = (patchID, patchData) => async (dispatch) => {
+  dispatch({ type: UPDATE_PATCH_LOADING });
+  try {
+    const res = await axios.put(
+      `http://localhost:5000/api/patches/${patchID}`,
+      patchData
+    );
+    dispatch({ type: UPDATE_PATCH_SUCCESS, payload: res.data });
+  } catch (error) {
+    dispatch({ type: UPDATE_PATCH_FAILURE, payload: error });
   }
 };
