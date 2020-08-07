@@ -85,7 +85,10 @@ const PatchForm = ({
     const values = [];
     // get current selections for each input
     document.querySelectorAll(`#${e.target.id}`).forEach((input) => {
-      values.push(input.selectedOptions[0].id);
+      values.push({
+        id: input.selectedOptions[0].id,
+        name: input.selectedOptions[0].textContent,
+      });
     });
     // de-duplicate and append to form state
     setFormData({ ...formData, [e.target.id]: [...new Set(values)] });
