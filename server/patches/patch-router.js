@@ -141,10 +141,12 @@ router.put("/:patchID", async (req, res) => {
   }
 });
 
-router.delete("/:patchName", async (req, res) => {
+router.delete("/:patchID", async (req, res) => {
   try {
-    await db.deletePatch(req.params.patchName);
-    res.status(200).json({ msg: "Successfully deleted patch" });
+    await db.deletePatch(req.params.patchID);
+    res
+      .status(200)
+      .json({ msg: "Successfully deleted patch", id: req.params.patchID });
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Failed to delete patch" });
