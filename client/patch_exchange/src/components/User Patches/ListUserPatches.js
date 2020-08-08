@@ -7,21 +7,34 @@ import colors from "../../constants/colors";
 
 import { Button } from "../Button/Button";
 import { Snackbar } from "../Snackbar/Snackbar";
-import { getPatchById } from "../../actions/patchActions";
+import { getPatchById, deletePatch } from "../../actions/patchActions";
 
-const ListUserPatches = ({ patches, getPatchById }) => {
+const ListUserPatches = ({ patches, getPatchById, deletePatch }) => {
   const handleSelect = (patch) => {
     getPatchById(patch.id);
+  };
+
+  const handleDelete = (id) => {
+    if (
+      window.confirm(
+        "Are you sure you want to permanently delete this patch and all associated versions?"
+      )
+    ) {
+      deletePatch(id);
+    }
   };
 
   if (patches?.length) {
     return (
       <>
         {patches.map((patch) => (
-          <Patch key={patch.id} onClick={() => handleSelect(patch)}>
+          <Patch key={patch.id}>
             <PatchName>{patch.name}</PatchName>
             <ButtonContainer>
-              <Link to={`/patches/${patch.name}/${patch.id}`}>
+              <Link
+                to={`/patches/${patch.name}/${patch.id}`}
+                onClick={() => handleSelect(patch)}
+              >
                 <Button>view</Button>
               </Link>
               <Link to={`add-version/${patch.id}`}>
@@ -39,9 +52,10 @@ const ListUserPatches = ({ patches, getPatchById }) => {
               >
                 <Button>edit version</Button>
               </Link>
-              <Link to="/#">
+
+              <ButtonWrapper onClick={() => handleDelete(patch.id)}>
                 <Button>delete</Button>
-              </Link>
+              </ButtonWrapper>
             </ButtonContainer>
           </Patch>
         ))}
@@ -52,7 +66,7 @@ const ListUserPatches = ({ patches, getPatchById }) => {
   }
 };
 
-export default connect(null, { getPatchById })(ListUserPatches);
+export default connect(null, { getPatchById, deletePatch })(ListUserPatches);
 
 const Patch = styled.div`
   display: flex;
@@ -73,4 +87,12 @@ const ButtonContainer = styled.div`
 
 const PatchName = styled.p`
   font-size: 2.4rem;
+`;
+
+// not sure why, but onClick was not firing on the Button itself
+// this div only exists to capture the click event and ideally shouldn't exist
+// it's only here to keep keyboard acccessibility
+const ButtonWrapper = styled.div`
+  display: inline;
+  margin-left: 2rem;
 `;

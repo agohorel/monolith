@@ -30,6 +30,9 @@ import {
   GET_PATCH_VERSION_LOADING,
   GET_PATCH_VERSION_SUCCESS,
   GET_PATCH_VERSION_FAILURE,
+  DELETE_PATCH_LOADING,
+  DELETE_PATCH_SUCCESS,
+  DELETE_PATCH_FAILURE,
 } from "./types";
 
 export const fetchMetadataLists = () => async (dispatch) => {
@@ -163,5 +166,20 @@ export const getPatchVersion = (versionID) => async (dispatch) => {
     dispatch({ type: GET_PATCH_VERSION_SUCCESS, payload: res.data });
   } catch (error) {
     dispatch({ type: GET_PATCH_VERSION_FAILURE, payload: error });
+  }
+};
+
+export const deletePatch = (patchID) => async (dispatch) => {
+  dispatch({ type: DELETE_PATCH_LOADING });
+  try {
+    const res = await axios.delete(
+      `http://localhost:5000/api/patches/${patchID}`
+    );
+    dispatch({
+      type: DELETE_PATCH_SUCCESS,
+      payload: { msg: res.data.msg, id: patchID },
+    });
+  } catch (error) {
+    dispatch({ type: DELETE_PATCH_FAILURE, payload: error });
   }
 };
