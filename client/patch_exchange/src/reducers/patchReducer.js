@@ -23,6 +23,9 @@ import {
   UPDATE_VERSION_LOADING,
   UPDATE_VERSION_SUCCESS,
   UPDATE_VERSION_FAILURE,
+  GET_PATCH_VERSIONS_LOADING,
+  GET_PATCH_VERSIONS_SUCCESS,
+  GET_PATCH_VERSIONS_FAILURE,
 } from "../actions/types";
 
 const initialState = {
@@ -46,6 +49,7 @@ export const patchReducer = (state = initialState, action) => {
     case ADD_VERSION_LOADING:
     case UPDATE_PATCH_LOADING:
     case UPDATE_VERSION_LOADING:
+    case GET_PATCH_VERSIONS_LOADING:
       return {
         ...state,
         errors: null,
@@ -89,6 +93,15 @@ export const patchReducer = (state = initialState, action) => {
         loading: false,
       };
 
+    case GET_PATCH_VERSIONS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        selectedPatch: {
+          versions: payload,
+        },
+      };
+
     case META_LIST_FAILURE:
     case ADD_PATCH_FAILURE:
     case SEARCH_PATCH_FAILURE:
@@ -97,6 +110,7 @@ export const patchReducer = (state = initialState, action) => {
     case ADD_VERSION_FAILURE:
     case UPDATE_PATCH_FAILURE:
     case UPDATE_VERSION_FAILURE:
+    case GET_PATCH_VERSIONS_FAILURE:
       return {
         ...state,
         loading: false,

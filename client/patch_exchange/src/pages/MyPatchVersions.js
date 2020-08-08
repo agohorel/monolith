@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 
 import colors from "../constants/colors";
 
-const MyPatchVersions = ({ versions }) => {
+import { getPatchVersions } from "../actions/patchActions";
+
+const MyPatchVersions = ({ versions, getPatchVersions }) => {
+  const { pathname: path } = useLocation();
+  const id = path.substring(path.lastIndexOf("/") + 1, path.length);
+
+  useEffect(() => {
+    getPatchVersions(id);
+  }, []);
+
   return (
     <Versions>
       {versions?.map((version) => (
@@ -24,7 +34,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {})(MyPatchVersions);
+export default connect(mapStateToProps, { getPatchVersions })(MyPatchVersions);
 
 const Versions = styled.div`
   display: flex;
