@@ -26,6 +26,9 @@ import {
   GET_PATCH_VERSIONS_LOADING,
   GET_PATCH_VERSIONS_SUCCESS,
   GET_PATCH_VERSIONS_FAILURE,
+  GET_PATCH_VERSION_LOADING,
+  GET_PATCH_VERSION_SUCCESS,
+  GET_PATCH_VERSION_FAILURE,
 } from "../actions/types";
 
 const initialState = {
@@ -35,6 +38,7 @@ const initialState = {
   searchResult: {},
   userPatches: [],
   selectedPatch: {},
+  selectedVersion: {},
 };
 
 export const patchReducer = (state = initialState, action) => {
@@ -50,6 +54,7 @@ export const patchReducer = (state = initialState, action) => {
     case UPDATE_PATCH_LOADING:
     case UPDATE_VERSION_LOADING:
     case GET_PATCH_VERSIONS_LOADING:
+    case GET_PATCH_VERSION_LOADING:
       return {
         ...state,
         errors: null,
@@ -98,8 +103,16 @@ export const patchReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         selectedPatch: {
+          ...state.selectedPatch,
           versions: payload,
         },
+      };
+
+    case GET_PATCH_VERSION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        selectedVersion: payload,
       };
 
     case META_LIST_FAILURE:
@@ -111,6 +124,7 @@ export const patchReducer = (state = initialState, action) => {
     case UPDATE_PATCH_FAILURE:
     case UPDATE_VERSION_FAILURE:
     case GET_PATCH_VERSIONS_FAILURE:
+    case GET_PATCH_VERSION_FAILURE:
       return {
         ...state,
         loading: false,

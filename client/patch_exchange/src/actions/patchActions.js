@@ -27,6 +27,9 @@ import {
   GET_PATCH_VERSIONS_LOADING,
   GET_PATCH_VERSIONS_SUCCESS,
   GET_PATCH_VERSIONS_FAILURE,
+  GET_PATCH_VERSION_LOADING,
+  GET_PATCH_VERSION_SUCCESS,
+  GET_PATCH_VERSION_FAILURE,
 } from "./types";
 
 export const fetchMetadataLists = () => async (dispatch) => {
@@ -148,5 +151,17 @@ export const getPatchVersions = (patchID) => async (dispatch) => {
     dispatch({ type: GET_PATCH_VERSIONS_SUCCESS, payload: res.data });
   } catch (error) {
     dispatch({ type: GET_PATCH_VERSIONS_FAILURE, payload: error });
+  }
+};
+
+export const getPatchVersion = (versionID) => async (dispatch) => {
+  dispatch({ type: GET_PATCH_VERSION_LOADING });
+  try {
+    const res = await axios.get(
+      `http://localhost:5000/api/patches/versions/${versionID}`
+    );
+    dispatch({ type: GET_PATCH_VERSION_SUCCESS, payload: res.data });
+  } catch (error) {
+    dispatch({ type: GET_PATCH_VERSION_FAILURE, payload: error });
   }
 };

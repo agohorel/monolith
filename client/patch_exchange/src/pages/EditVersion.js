@@ -2,31 +2,22 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 
-import { getPatchById } from "../actions/patchActions";
+import { getPatchVersion } from "../actions/patchActions";
 
 import VersionForm from "../components/Forms/VersionForm";
 
-const EditVersion = ({ getPatchById, patch }) => {
+const EditVersion = ({ getPatchVersion, version }) => {
   const { pathname: path } = useLocation();
   const id = path.substring(path.lastIndexOf("/") + 1, path.length);
 
-  // useEffect(() => {
-  //   // prevent re-fetch if pre-fetched
-  //   if (patch?.details?.id !== Number(id)) {
-  //     getPatchById(id);
-  //   }
-  // }, []);
-
-  console.log(patch.versions);
-
-  const [existingVersionData] = patch?.versions.filter(
-    (version) => version.id === Number(id)
-  );
+  useEffect(() => {
+    getPatchVersion(id);
+  }, []);
 
   return (
     <>
       <VersionForm
-        existingForm={existingVersionData}
+        existingForm={version}
         patchID={id}
         mode="edit"
       ></VersionForm>
@@ -36,8 +27,8 @@ const EditVersion = ({ getPatchById, patch }) => {
 
 const mapStateToProps = (state) => {
   return {
-    patch: state.patches.selectedPatch,
+    version: state.patches.selectedVersion,
   };
 };
 
-export default connect(mapStateToProps, { getPatchById })(EditVersion);
+export default connect(mapStateToProps, { getPatchVersion })(EditVersion);
