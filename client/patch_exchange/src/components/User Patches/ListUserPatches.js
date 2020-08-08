@@ -6,6 +6,7 @@ import styled from "styled-components";
 import colors from "../../constants/colors";
 
 import { Button } from "../Button/Button";
+import { Snackbar } from "../Snackbar/Snackbar";
 import { getPatchById } from "../../actions/patchActions";
 
 const ListUserPatches = ({ patches, getPatchById }) => {
@@ -13,38 +14,42 @@ const ListUserPatches = ({ patches, getPatchById }) => {
     getPatchById(patch.id);
   };
 
-  return (
-    <>
-      {patches.map((patch) => (
-        <Patch key={patch.id} onClick={() => handleSelect(patch)}>
-          <PatchName>{patch.name}</PatchName>
-          <ButtonContainer>
-            <Link to={`/patches/${patch.name}/${patch.id}`}>
-              <Button>view</Button>
-            </Link>
-            <Link to={`add-version/${patch.id}`}>
-              <Button>add version</Button>
-            </Link>
-            <Link
-              to={`/patches/${patch.name}/edit/${patch.id}`}
-              onClick={() => handleSelect(patch)}
-            >
-              <Button>edit patch</Button>
-            </Link>
-            <Link
-              to={`/patches/${patch.name}/edit-versions/${patch.id}`}
-              onClick={() => handleSelect(patch)}
-            >
-              <Button>edit version</Button>
-            </Link>
-            <Link to="/#">
-              <Button>delete</Button>
-            </Link>
-          </ButtonContainer>
-        </Patch>
-      ))}
-    </>
-  );
+  if (patches?.length) {
+    return (
+      <>
+        {patches.map((patch) => (
+          <Patch key={patch.id} onClick={() => handleSelect(patch)}>
+            <PatchName>{patch.name}</PatchName>
+            <ButtonContainer>
+              <Link to={`/patches/${patch.name}/${patch.id}`}>
+                <Button>view</Button>
+              </Link>
+              <Link to={`add-version/${patch.id}`}>
+                <Button>add version</Button>
+              </Link>
+              <Link
+                to={`/patches/${patch.name}/edit/${patch.id}`}
+                onClick={() => handleSelect(patch)}
+              >
+                <Button>edit patch</Button>
+              </Link>
+              <Link
+                to={`/patches/${patch.name}/edit-versions/${patch.id}`}
+                onClick={() => handleSelect(patch)}
+              >
+                <Button>edit version</Button>
+              </Link>
+              <Link to="/#">
+                <Button>delete</Button>
+              </Link>
+            </ButtonContainer>
+          </Patch>
+        ))}
+      </>
+    );
+  } else {
+    return <Snackbar type="warning">You don't have any patches yet!</Snackbar>;
+  }
 };
 
 export default connect(null, { getPatchById })(ListUserPatches);
