@@ -104,7 +104,10 @@ const VersionForm = ({
           version_id: path_suffix,
         });
       } else {
-        createPatchVersion(formData);
+        createPatchVersion({
+          ...formData,
+          release_status: formData.release_status.id,
+        });
       }
     }
   }, [uploaded, createPatchVersion, formData]);
