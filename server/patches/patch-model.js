@@ -409,7 +409,7 @@ async function updatePatchVersion(versionID, patchVersion) {
       .update({
         version_fk: versionID,
         linux_file_id: patchVersion.linux_file,
-        mac_file_id: patchVersion.macOS_file,
+        mac_file_id: patchVersion.mac_file,
         windows_file_id: patchVersion.windows_file,
         android_file_id: patchVersion.android_file,
         ios_file_id: patchVersion.iOS_file,
@@ -420,7 +420,7 @@ async function updatePatchVersion(versionID, patchVersion) {
     await db("version_status")
       .update({
         version_fk: versionID,
-        status_fk: Number(patchVersion.releaseStatuses),
+        status_fk: Number(patchVersion.release_status),
       })
       .where({ version_fk: versionID })
       .transacting(trx);
