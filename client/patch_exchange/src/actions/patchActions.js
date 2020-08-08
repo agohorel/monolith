@@ -124,7 +124,6 @@ export const updatePatch = (patchID, patchData) => async (dispatch) => {
 };
 
 export const updateVersion = (versionData) => async (dispatch) => {
-  console.log(versionData);
   dispatch({ type: UPDATE_VERSION_LOADING });
   try {
     const res = await axios.put(

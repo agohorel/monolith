@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import {
   fetchMetadataLists,
   createPatchVersion,
+  updateVersion,
 } from "../../actions/patchActions";
 import { addFile, uploadPatch } from "../../actions/b2Actions";
 
@@ -20,13 +21,16 @@ const VersionForm = ({
   createPatchVersion,
   user,
   uploadPatch,
+  updateVersion,
   b2Response,
   fileList,
+  mode,
+  existingForm,
 }) => {
   const [uploaded, setUploaded] = useState(false);
-
   const { pathname: path } = useLocation();
-  const patchID = path.substring(path.lastIndexOf("/") + 1, path.length);
+  const path_suffix = path.substring(path.lastIndexOf("/") + 1, path.length);
+  const patch_fk = mode === "edit" ? null : path_suffix;
 
   const [formData, setFormData] = useState({
     version: "",
@@ -37,8 +41,24 @@ const VersionForm = ({
     android_file: "",
     ios_file: "",
     release_status: "",
-    patch_fk: patchID,
+    patch_fk,
   });
+
+  useEffect(() => {
+    if (existingForm?.version) {
+      setFormData({
+        ...formData,
+        version: existingForm.version,
+        version_description: existingForm.description,
+        linux_file: existingForm.linuxId,
+        windows_file: existingForm.windowsId,
+        mac_file: existingForm.macId,
+        android_file: existingForm.androidId,
+        ios_file: existingForm.iosID,
+        release_status: existingForm.status,
+      });
+    }
+  }, [existingForm]);
 
   useEffect(() => {
     fetchMetadataLists();
@@ -58,7 +78,10 @@ const VersionForm = ({
   const handleSingleDropdown = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.selectedOptions[0].id,
+      [e.target.id]: {
+        id: e.target.selectedOptions[0].id,
+        name: e.target.selectedOptions[0].textContent,
+      },
     });
   };
 
@@ -74,40 +97,76 @@ const VersionForm = ({
 
   useEffect(() => {
     if (uploaded) {
-      createPatchVersion(formData);
+      if (mode === "edit") {
+        updateVersion({
+          ...formData,
+          release_status: formData.release_status.id,
+          version_id: path_suffix,
+        });
+      } else {
+        createPatchVersion(formData);
+      }
     }
   }, [uploaded, createPatchVersion, formData]);
 
   return (
     <Form onSubmit={handleSubmit}>
       <Label htmlFor="version">version name</Label>
-      <Input id="version" onChange={handleTextChange}></Input>
+      <Input
+        id="version"
+        onChange={handleTextChange}
+        value={formData.version}
+      ></Input>
 
       <Label htmlFor="version_description">version description</Label>
-      <Textarea id="version_description" onChange={handleTextChange}></Textarea>
+      <Textarea
+        id="version_description"
+        onChange={handleTextChange}
+        value={formData.version_description}
+      ></Textarea>
 
       <SelectContainer>
         <Label htmlFor="release_status">release status</Label>
         <SelectRow style={{ marginBottom: "2rem" }}>
-          <Select id="release_status" onChange={handleSingleDropdown}>
-            {metadataLists.release_statuses?.map((releaseStatus) => {
-              return (
-                <Option
-                  key={releaseStatus.id}
-                  id={releaseStatus.id}
-                  value={releaseStatus.release_status}
-                >
-                  {releaseStatus.release_status}
-                </Option>
-              );
-            })}
-          </Select>
+          {mode === "edit" && (
+            <Select
+              id="release_status"
+              onChange={handleSingleDropdown}
+              value={formData.release_status?.name}
+            >
+              {metadataLists.release_statuses?.map((releaseStatus) => {
+                return (
+                  <Option
+                    key={releaseStatus.id}
+                    id={releaseStatus.id}
+                    value={releaseStatus.release_status}
+                  >
+                    {releaseStatus.release_status}
+                  </Option>
+                );
+              })}
+            </Select>
+          )}
+          {mode !== "edit" && (
+            <Select id="release_status" onChange={handleSingleDropdown}>
+              {metadataLists.release_statuses?.map((releaseStatus) => {
+                return (
+                  <Option
+                    key={releaseStatus.id}
+                    id={releaseStatus.id}
+                    value={releaseStatus.release_status}
+                  >
+                    {releaseStatus.release_status}
+                  </Option>
+                );
+              })}
+            </Select>
+          )}
         </SelectRow>
       </SelectContainer>
 
       <UploadContainer>
         {metadataLists.operating_systems?.map((os) => {
-          console.log(os);
           return (
             <FileUploader
               key={os.id}
@@ -139,6 +198,7 @@ export default connect(mapStateToProps, {
   fetchMetadataLists,
   createPatchVersion,
   uploadPatch,
+  updateVersion,
   addFile,
 })(VersionForm);
 

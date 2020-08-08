@@ -6,6 +6,8 @@ import AuthForm from "./components/Forms/AuthForm";
 import AddPatch from "./pages/AddPatch";
 import AddVersion from "./pages/AddVersion";
 import EditPatch from "./pages/EditPatch";
+import EditVersion from "./pages/EditVersion";
+import MyPatchVersions from "./pages/MyPatchVersions";
 import SearchPatches from "./pages/Search";
 import MyPatches from "./pages/MyPatches";
 import PatchDetails from "./pages/PatchDetails";
@@ -29,6 +31,14 @@ function App() {
         <PrivateRoute
           path="/patches/:name/edit"
           component={EditPatch}
+        ></PrivateRoute>
+        <PrivateRoute
+          path="/patches/:name/edit-versions/:patchID"
+          component={MyPatchVersions}
+        ></PrivateRoute>
+        <PrivateRoute
+          path="/edit-version/:versionID"
+          component={EditVersion}
         ></PrivateRoute>
         <PrivateRoute path="/add-version" component={AddVersion}></PrivateRoute>
         <PrivateRoute path="/search" component={SearchPatches}></PrivateRoute>

@@ -29,7 +29,13 @@ const ListUserPatches = ({ patches, getPatchById }) => {
               to={`/patches/${patch.name}/edit/${patch.id}`}
               onClick={() => handleSelect(patch)}
             >
-              <Button>edit</Button>
+              <Button>edit patch</Button>
+            </Link>
+            <Link
+              to={`/patches/${patch.name}/edit-versions/${patch.id}`}
+              onClick={() => handleSelect(patch)}
+            >
+              <Button>edit version</Button>
             </Link>
             <Link to="/#">
               <Button>delete</Button>
