@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 
 import colors from "../constants/colors";
+import { Snackbar } from "../components/Snackbar/Snackbar";
 
 import { getPatchVersions } from "../actions/patchActions";
 
@@ -16,16 +17,24 @@ const MyPatchVersions = ({ versions, getPatchVersions }) => {
     getPatchVersions(id);
   }, []);
 
-  return (
-    <Versions>
-      {versions?.map((version) => (
-        <Version key={version.id} to={`/edit-version/${version.id}`}>
-          <Name>{version.version}</Name>
-          <Description>{version.description}</Description>
-        </Version>
-      ))}
-    </Versions>
-  );
+  if (versions?.length) {
+    return (
+      <Versions>
+        {versions?.map((version) => (
+          <Version key={version.id} to={`/edit-version/${version.id}`}>
+            <Name>{version.version}</Name>
+            <Description>{version.description}</Description>
+          </Version>
+        ))}
+      </Versions>
+    );
+  } else {
+    return (
+      <Snackbar type="warning">
+        you don't have any versions for this patch!
+      </Snackbar>
+    );
+  }
 };
 
 const mapStateToProps = (state) => {
