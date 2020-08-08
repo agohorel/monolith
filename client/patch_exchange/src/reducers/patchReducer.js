@@ -20,6 +20,9 @@ import {
   UPDATE_PATCH_LOADING,
   UPDATE_PATCH_SUCCESS,
   UPDATE_PATCH_FAILURE,
+  UPDATE_VERSION_LOADING,
+  UPDATE_VERSION_SUCCESS,
+  UPDATE_VERSION_FAILURE,
 } from "../actions/types";
 
 const initialState = {
@@ -42,6 +45,7 @@ export const patchReducer = (state = initialState, action) => {
     case GET_PATCH_BY_ID_LOADING:
     case ADD_VERSION_LOADING:
     case UPDATE_PATCH_LOADING:
+    case UPDATE_VERSION_LOADING:
       return {
         ...state,
         errors: null,
@@ -79,6 +83,7 @@ export const patchReducer = (state = initialState, action) => {
 
     case ADD_VERSION_SUCCESS:
     case UPDATE_PATCH_SUCCESS:
+    case UPDATE_VERSION_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -91,6 +96,7 @@ export const patchReducer = (state = initialState, action) => {
     case GET_PATCH_BY_ID_FAILURE:
     case ADD_VERSION_FAILURE:
     case UPDATE_PATCH_FAILURE:
+    case UPDATE_VERSION_FAILURE:
       return {
         ...state,
         loading: false,
