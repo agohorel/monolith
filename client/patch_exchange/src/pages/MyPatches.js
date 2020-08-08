@@ -15,7 +15,7 @@ const MyPatches = ({ fetchUserPatches, userPatches, userID }) => {
 
 const mapStateToProps = (state) => {
   return {
-    userID: state.auth.user.id,
+    userID: state?.auth?.user?.id,
     userPatches: state.patches.userPatches,
   };
 };
