@@ -61,9 +61,9 @@ describe("Patch CRUD route tests", () => {
   it("GET - Should return a patch by ID", async () => {
     const res = await request(server).get("/api/patches/1");
     expect(res.status).toEqual(200);
-    expect(res.body.name).toBeDefined();
-    expect(res.body.authorName).toBeDefined();
-    expect(res.body.description).toBeDefined();
+    expect(res.body.details.name).toBeDefined();
+    expect(res.body.details.author_name).toBeDefined();
+    expect(res.body.details.description).toBeDefined();
   });
 
   it("PUT - should update a patch", async () => {

@@ -18,29 +18,27 @@ module.exports.categories = [
 ];
 
 module.exports.patch = {
-  user_id: 1,
-  user_name: "johndoe",
+  author_id: 1,
+  author_name: "johndoe",
   name: "shred12",
-  image_url: "www.image.com",
+  image_id: "www.image.com",
   preview_url: "www.preview.com",
   repo_url: "www.repo.com",
   homepage_url: "www.homepage.com",
-  version: "1.0",
   file_url: "www.file.com",
-  description: "1.0 release woot",
-  releaseStatuses: "1",
-  operatingSystems: ["1", "2"],
-  platforms: ["1"],
-  categories: ["2"],
-  tags: ["1", "2"],
+  description: "this is a patch that does something",
+  operating_systems: [1, 2],
+  platforms: [1],
+  categories: [2],
+  tags: [2, 3],
 };
 
 module.exports.updatePatchData = {
   name: "testpatch ULTIMATE EDITION",
-  operatingSystems: ["4", "5"],
-  platforms: ["1"],
-  categories: ["1"],
-  tags: ["1", "4"],
+  operating_systems: [{ id: 4 }, { id: 5 }],
+  platforms: [{ id: 1 }],
+  categories: [{ id: 1 }],
+  tags: [{ id: 4 }, { id: 5 }],
 };
 
 module.exports.version = {
@@ -52,7 +50,7 @@ module.exports.version = {
     "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
   windows_file:
     "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
-  releaseStatuses: ["1"],
+  release_status: "1",
 };
 
 module.exports.updateVersionData = {
@@ -65,5 +63,5 @@ module.exports.updateVersionData = {
     "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
   windows_file:
     "4_za1b6b531d1ed4c6d78110a17_f103190dba683dbef_d20200525_m210918_c001_v0001134_t0032",
-  releaseStatuses: ["2"],
+  release_status: "2",
 };
