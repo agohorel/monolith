@@ -23,10 +23,10 @@ const PatchDetailContainer = ({ patch, b2Auth, getPatchById }) => {
 
   useEffect(() => {
     // only fetch if not already pre-fetched from another page
-    if (patch?.details?.id !== id) {
+    if (patch?.details?.id !== Number(id)) {
       getPatchById(id);
     }
-  }, [getPatchById, id, patch]);
+  }, [getPatchById, patch, id]);
 
   if (patch.details) {
     return (
