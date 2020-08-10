@@ -64,7 +64,7 @@ const PatchForm = ({
       categories: patchToEdit?.categories || [],
       tags: patchToEdit?.tags || [],
     });
-  }, [patchToEdit]);
+  }, [patchToEdit, user]);
 
   useEffect(() => {
     fetchMetadataLists();
@@ -114,7 +114,7 @@ const PatchForm = ({
         createPatch(formData);
       }
     }
-  }, [uploaded, createPatch, updatePatch, formData]);
+  }, [uploaded, createPatch, updatePatch, formData, mode, patchID]);
 
   return (
     <Form onSubmit={handleSubmit}>

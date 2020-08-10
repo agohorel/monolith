@@ -15,7 +15,7 @@ const MyPatchVersions = ({ versions, getPatchVersions }) => {
 
   useEffect(() => {
     getPatchVersions(id);
-  }, []);
+  }, [getPatchVersions, id]);
 
   if (versions?.length) {
     return (

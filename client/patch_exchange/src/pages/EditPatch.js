@@ -15,7 +15,7 @@ const EditPatch = ({ getPatchById, patch }) => {
     if (patch?.details?.id !== Number(id)) {
       getPatchById(id);
     }
-  }, []);
+  }, [getPatchById, id, patch]);
 
   return (
     <>

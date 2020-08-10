@@ -58,7 +58,7 @@ const VersionForm = ({
         release_status: existingForm.status,
       });
     }
-  }, [existingForm]);
+  }, [existingForm, formData]);
 
   useEffect(() => {
     fetchMetadataLists();
@@ -110,7 +110,14 @@ const VersionForm = ({
         });
       }
     }
-  }, [uploaded, createPatchVersion, formData]);
+  }, [
+    uploaded,
+    createPatchVersion,
+    formData,
+    mode,
+    path_suffix,
+    updateVersion,
+  ]);
 
   return (
     <Form onSubmit={handleSubmit}>

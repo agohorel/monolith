@@ -12,7 +12,7 @@ const EditVersion = ({ getPatchVersion, version }) => {
 
   useEffect(() => {
     getPatchVersion(id);
-  }, []);
+  }, [getPatchVersion, id]);
 
   return (
     <>

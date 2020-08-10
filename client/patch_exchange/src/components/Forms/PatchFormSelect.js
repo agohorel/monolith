@@ -32,7 +32,7 @@ export const PatchFormSelect = ({
         tags: existingForm.tags,
       });
     }
-  }, [existingForm]);
+  }, [existingForm, mode]);
 
   const addSelectGroup = (e) => {
     const type = e.currentTarget.getAttribute("name");

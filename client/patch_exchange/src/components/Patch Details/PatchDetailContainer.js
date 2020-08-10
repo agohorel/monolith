@@ -26,7 +26,7 @@ const PatchDetailContainer = ({ patch, b2Auth, getPatchById }) => {
     if (patch?.details?.id !== id) {
       getPatchById(id);
     }
-  }, [getPatchById]);
+  }, [getPatchById, id, patch]);
 
   if (patch.details) {
     return (
