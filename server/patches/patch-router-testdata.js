@@ -27,10 +27,10 @@ module.exports.patch = {
   homepage_url: "www.homepage.com",
   file_url: "www.file.com",
   description: "this is a patch that does something",
-  operating_systems: [1, 2],
-  platforms: [1],
-  categories: [2],
-  tags: [2, 3],
+  operating_systems: [{ id: 1 }, { id: 2 }],
+  platforms: [{ id: 2 }],
+  categories: [{ id: 3 }],
+  tags: [{ id: 1 }, { id: 1 }],
 };
 
 module.exports.updatePatchData = {
