@@ -125,7 +125,7 @@ async function addPatch(patch) {
         .insert(
           patch.operating_systems.map((os) => ({
             patch_fk: Number(patchID),
-            os_fk: Number(os),
+            os_fk: Number(os.id),
           }))
         )
         .transacting(trx);
@@ -134,7 +134,7 @@ async function addPatch(patch) {
         .insert(
           patch.categories.map((category) => ({
             patch_fk: Number(patchID),
-            category_fk: Number(category),
+            category_fk: Number(category.id),
           }))
         )
         .transacting(trx);
@@ -143,7 +143,7 @@ async function addPatch(patch) {
         .insert(
           patch.tags.map((tag) => ({
             patch_fk: Number(patchID),
-            tag_fk: Number(tag),
+            tag_fk: Number(tag.id),
           }))
         )
         .transacting(trx);
@@ -152,7 +152,7 @@ async function addPatch(patch) {
         .insert(
           patch.platforms.map((platform) => ({
             patch_fk: Number(patchID),
-            platform_fk: Number(platform),
+            platform_fk: Number(platform.id),
           }))
         )
         .transacting(trx);
