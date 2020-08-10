@@ -16,9 +16,9 @@ const PatchDetailContainer = ({ patch, b2Auth, getPatchById }) => {
   const id = path.substring(path.lastIndexOf("/") + 1, path.length);
 
   const links = [
-    { text: "homepage", url: patch.homepage_url },
-    { text: "preview", url: patch.preview_url },
-    { text: "repository", url: patch.repo_url },
+    { text: "homepage", url: patch?.details?.homepage_url },
+    { text: "preview", url: patch?.details?.preview_url },
+    { text: "repository", url: patch?.details?.repo_url },
   ];
 
   useEffect(() => {
