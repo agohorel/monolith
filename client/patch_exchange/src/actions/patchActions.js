@@ -160,7 +160,7 @@ export const getPatchVersion = (versionID) => async (dispatch) => {
   dispatch({ type: GET_PATCH_VERSION_LOADING });
   try {
     const res = await axios.get(
-      `http://localhost:5000/api/patches/versions/${versionID}`
+      `http://localhost:5000/api/versions/${versionID}`
     );
     dispatch({ type: GET_PATCH_VERSION_SUCCESS, payload: res.data });
   } catch (error) {
