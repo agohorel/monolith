@@ -1,6 +1,6 @@
 import React from "react";
 
-import PatchForm from "../components/Forms/AddPatchForm";
+import PatchForm from "../components/Forms/PatchForm";
 
 const AddPatch = () => {
   return (

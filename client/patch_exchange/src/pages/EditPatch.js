@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 
 import { getPatchById } from "../actions/patchActions";
 
-import PatchForm from "../components/Forms/AddPatchForm";
+import PatchForm from "../components/Forms/PatchForm";
 
 const EditPatch = ({ getPatchById, patch }) => {
   const { pathname: path } = useLocation();
