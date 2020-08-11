@@ -66,7 +66,6 @@ export const patchReducer = (state = initialState, action) => {
       };
 
     case META_LIST_SUCCESS:
-    case ADD_PATCH_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -92,6 +91,15 @@ export const patchReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         selectedPatch: payload,
+      };
+
+    case ADD_PATCH_SUCCESS:
+      return {
+        ...state,
+        selectedPatch: {
+          ...state.selectedPatch,
+          details: payload,
+        },
       };
 
     case ADD_VERSION_SUCCESS:
