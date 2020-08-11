@@ -16,7 +16,13 @@ export const PatchVersion = ({ version, deleteVersion }) => {
   };
 
   const handleDelete = () => {
-    deleteVersion(version.id);
+    if (
+      window.confirm(
+        "Are you sure you want to permanently delete this version?"
+      )
+    ) {
+      deleteVersion(version.id);
+    }
   };
 
   return (
