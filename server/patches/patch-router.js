@@ -121,8 +121,10 @@ router.get("/:patchName/search", async (req, res) => {
 
 router.post("/add-patch", async (req, res) => {
   try {
-    await db.addPatch(req.body);
-    res.status(201).json({ msg: "Successfully created patch" });
+    const patchDetails = await db.addPatch(req.body);
+    res
+      .status(201)
+      .json({ msg: "Successfully created patch", details: patchDetails });
   } catch (error) {
     console.error(error);
     res

@@ -99,7 +99,7 @@ async function createPatch(patch) {
 
 async function addPatch(patch) {
   try {
-    await db.transaction(async (trx) => {
+    const patchDetails = await db.transaction(async (trx) => {
       const patchID = await db("patches")
         .insert({
           name: patch.name,
@@ -156,7 +156,12 @@ async function addPatch(patch) {
           }))
         )
         .transacting(trx);
+      return {
+        ...patch,
+        id: patchID,
+      };
     });
+    return patchDetails;
   } catch (error) {
     console.error(error);
     throw new Error(error);
