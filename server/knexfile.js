@@ -34,7 +34,7 @@ module.exports = {
       directory: "./db/migrations"
     },
     seeds: {
-      directory: "./db/seeds/testing"
+      directory: "./db/seeds/dev"
     },
     pool: {
       min: 2,
