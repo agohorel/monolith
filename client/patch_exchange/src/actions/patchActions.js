@@ -53,14 +53,13 @@ export const fetchMetadataLists = () => async (dispatch) => {
 export const createPatch = (patchData) => async (dispatch) => {
   dispatch({ type: ADD_PATCH_LOADING });
 
-  console.log(patchData);
-
   try {
     const res = await axios.post(
       "http://localhost:5000/api/patches/add-patch",
       patchData
     );
-    dispatch({ type: ADD_PATCH_SUCCESS, payload: res.data });
+
+    dispatch({ type: ADD_PATCH_SUCCESS, payload: res.data.details });
   } catch (error) {
     console.error(error);
     dispatch({ type: ADD_PATCH_FAILURE, payload: error });
