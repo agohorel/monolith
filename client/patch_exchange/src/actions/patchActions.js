@@ -33,6 +33,9 @@ import {
   DELETE_PATCH_LOADING,
   DELETE_PATCH_SUCCESS,
   DELETE_PATCH_FAILURE,
+  DELETE_VERSION_LOADING,
+  DELETE_VERSION_SUCCESS,
+  DELETE_VERSION_FAILURE,
 } from "./types";
 
 export const fetchMetadataLists = () => async (dispatch) => {
@@ -71,7 +74,7 @@ export const createPatchVersion = (versionData) => async (dispatch) => {
 
   try {
     const res = await axios.post(
-      `http://localhost:5000/api/patches/${versionData.patch_fk}/versions`,
+      `http://localhost:5000/api/versions/${versionData.patch_fk}`,
       versionData
     );
 
@@ -135,7 +138,7 @@ export const updateVersion = (versionData) => async (dispatch) => {
   dispatch({ type: UPDATE_VERSION_LOADING });
   try {
     const res = await axios.put(
-      `http://localhost:5000/api/patches/versions/${versionData.version_id}/`,
+      `http://localhost:5000/api/versions/${versionData.version_id}/`,
       versionData
     );
     dispatch({ type: UPDATE_VERSION_SUCCESS, payload: res.data });
@@ -180,5 +183,18 @@ export const deletePatch = (patchID) => async (dispatch) => {
     });
   } catch (error) {
     dispatch({ type: DELETE_PATCH_FAILURE, payload: error });
+  }
+};
+
+export const deleteVersion = (versionID) => async (dispatch) => {
+  dispatch({ type: DELETE_VERSION_LOADING });
+  try {
+    const res = await axios.delete(
+      `http://localhost:5000/api/versions/${versionID}`
+    );
+    dispatch({ type: DELETE_VERSION_SUCCESS, payload: res.data });
+  } catch (error) {
+    console.error(error);
+    dispatch({ type: DELETE_VERSION_FAILURE, payload: error });
   }
 };

@@ -3,8 +3,8 @@ import styled from "styled-components";
 
 import colors from "../../constants/colors";
 
-export const Button = ({ children }) => {
-  return <StyledButton>{children}</StyledButton>;
+export const Button = ({ className, children }) => {
+  return <StyledButton className={className}>{children}</StyledButton>;
 };
 
 const StyledButton = styled.button`

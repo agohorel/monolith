@@ -45,7 +45,7 @@ const VersionForm = ({
   });
 
   useEffect(() => {
-    if (existingForm?.version) {
+    if (mode === "edit") {
       setFormData({
         ...formData,
         version: existingForm.version,
@@ -58,7 +58,7 @@ const VersionForm = ({
         release_status: existingForm.status,
       });
     }
-  }, [existingForm, formData]);
+  }, [existingForm]);
 
   useEffect(() => {
     fetchMetadataLists();

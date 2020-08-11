@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 
-import colors from "../constants/colors";
 import { Snackbar } from "../components/Snackbar/Snackbar";
+import { PatchVersion } from "../components/User Patches/PatchVersion";
 
-import { getPatchVersions } from "../actions/patchActions";
+import { getPatchVersions, deleteVersion } from "../actions/patchActions";
 
-const MyPatchVersions = ({ versions, getPatchVersions }) => {
+const MyPatchVersions = ({ versions, getPatchVersions, deleteVersion }) => {
   const { pathname: path } = useLocation();
   const id = path.substring(path.lastIndexOf("/") + 1, path.length);
 
@@ -21,10 +21,11 @@ const MyPatchVersions = ({ versions, getPatchVersions }) => {
     return (
       <Versions>
         {versions?.map((version) => (
-          <Version key={version.id} to={`/edit-version/${version.id}`}>
-            <Name>{version.version}</Name>
-            <Description>{version.description}</Description>
-          </Version>
+          <PatchVersion
+            key={version.id}
+            version={version}
+            deleteVersion={deleteVersion}
+          ></PatchVersion>
         ))}
       </Versions>
     );
@@ -43,25 +44,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { getPatchVersions })(MyPatchVersions);
+export default connect(mapStateToProps, { getPatchVersions, deleteVersion })(
+  MyPatchVersions
+);
 
 const Versions = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const Version = styled(Link)`
-  background: ${colors.darkgrey};
-  padding: 1rem;
-  margin-bottom: 2rem;
-  text-decoration: none;
-  color: ${colors.offwhite};
-`;
-
-const Name = styled.h3`
-  font-size: 3rem;
-`;
-
-const Description = styled.p`
-  font-size: 1.4rem;
 `;

@@ -32,6 +32,9 @@ import {
   DELETE_PATCH_LOADING,
   DELETE_PATCH_SUCCESS,
   DELETE_PATCH_FAILURE,
+  DELETE_VERSION_LOADING,
+  DELETE_VERSION_SUCCESS,
+  DELETE_VERSION_FAILURE,
 } from "../actions/types";
 
 const initialState = {
@@ -59,6 +62,7 @@ export const patchReducer = (state = initialState, action) => {
     case GET_PATCH_VERSIONS_LOADING:
     case GET_PATCH_VERSION_LOADING:
     case DELETE_PATCH_LOADING:
+    case DELETE_VERSION_LOADING:
       return {
         ...state,
         errors: null,
@@ -136,6 +140,15 @@ export const patchReducer = (state = initialState, action) => {
         ),
       };
 
+    case DELETE_VERSION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        selectedPatch: state.selectedPatch.versions.filter(
+          (version) => version.id !== payload.id
+        ),
+      };
+
     case META_LIST_FAILURE:
     case ADD_PATCH_FAILURE:
     case SEARCH_PATCH_FAILURE:
@@ -147,6 +160,7 @@ export const patchReducer = (state = initialState, action) => {
     case GET_PATCH_VERSIONS_FAILURE:
     case GET_PATCH_VERSION_FAILURE:
     case DELETE_PATCH_FAILURE:
+    case DELETE_VERSION_FAILURE:
       return {
         ...state,
         loading: false,
