@@ -36,7 +36,10 @@ router.put("/:versionID", async (req, res) => {
 router.delete("/:versionID", async (req, res) => {
   try {
     await db.deletePatchVersion(req.params.versionID);
-    res.status(200).json({ msg: "Successfully deleted patch version" });
+    res.status(200).json({
+      msg: "Successfully deleted patch version",
+      id: req.params.versionID,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Failed to delete patch version" });
