@@ -57,20 +57,22 @@ const PatchForm = ({
   });
 
   useEffect(() => {
-    setFormData({
-      name: patch?.details?.name || "",
-      author_id: patch?.details?.author_id || user?.id,
-      author_name: patch?.details?.author_name || user?.username,
-      image_id: patch?.details?.image_id || "",
-      preview_url: patch?.details?.preview_url || "",
-      repo_url: patch?.details?.repo_url || "",
-      homepage_url: patch?.details?.homepage_url || "",
-      description: patch?.details?.description || "",
-      operating_systems: patch?.operating_systems || [],
-      platforms: patch?.platforms || [],
-      categories: patch?.categories || [],
-      tags: patch?.tags || [],
-    });
+    if (mode === "edit") {
+      setFormData({
+        name: patch?.details?.name || "",
+        author_id: patch?.details?.author_id || user?.id,
+        author_name: patch?.details?.author_name || user?.username,
+        image_id: patch?.details?.image_id || "",
+        preview_url: patch?.details?.preview_url || "",
+        repo_url: patch?.details?.repo_url || "",
+        homepage_url: patch?.details?.homepage_url || "",
+        description: patch?.details?.description || "",
+        operating_systems: patch?.operating_systems || [],
+        platforms: patch?.platforms || [],
+        categories: patch?.categories || [],
+        tags: patch?.tags || [],
+      });
+    }
   }, [patch, user]);
 
   useEffect(() => {
