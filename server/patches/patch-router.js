@@ -107,6 +107,17 @@ router.get("/:patchID", async (req, res) => {
   }
 });
 
+// GET patch versions
+router.get("/:patchID/versions", async (req, res) => {
+  try {
+    const patch = await db.getPatchVersions(req.params.patchID);
+    res.status(200).json(patch);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Failed to retrieve patch version" });
+  }
+});
+
 // SEARCH patch by NAME
 router.get("/:patchName/search", async (req, res) => {
   try {
@@ -152,56 +163,6 @@ router.delete("/:patchID", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Failed to delete patch" });
-  }
-});
-
-//// * PATCH VERSION CRUD ROUTES * ////
-
-router.get("/:patchID/versions", async (req, res) => {
-  try {
-    const patch = await db.getPatchVersions(req.params.patchID);
-    res.status(200).json(patch);
-  } catch (error) {
-    res.status(500).json({ msg: "Failed to retrieve patch version" });
-  }
-});
-
-router.get("/versions/:versionID", async (req, res) => {
-  try {
-    const patch = await db.getPatchVersionById(req.params.versionID);
-    res.status(200).json(patch);
-  } catch (error) {
-    res.status(500).json({ msg: "Failed to retrieve patch version" });
-  }
-});
-
-router.post("/:patchID/versions", async (req, res) => {
-  try {
-    await db.createPatchVersion(req.params.patchID, req.body);
-    res.status(201).json({ msg: "Successfully created patch version" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: "Failed to create patch version" });
-  }
-});
-
-router.put("/versions/:versionID", async (req, res) => {
-  try {
-    await db.updatePatchVersion(req.params.versionID, req.body);
-    res.status(200).json({ msg: "Successfully updated patch version" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: "Failed to update patch version" });
-  }
-});
-
-router.delete("/versions/:versionID", async (req, res) => {
-  try {
-    await db.deletePatchVersion(req.params.versionID);
-    res.status(200).json({ msg: "Successfully deleted patch version" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: "Failed to delete patch version" });
   }
 });
 
