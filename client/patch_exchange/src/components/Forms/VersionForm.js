@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 
 import {
   fetchMetadataLists,
+  fetchUserPatches,
   createPatchVersion,
   updateVersion,
 } from "../../actions/patchActions";
@@ -26,9 +27,13 @@ const VersionForm = ({
   fileList,
   mode,
   existingForm,
+  userPatches,
+  fetchUserPatches,
 }) => {
   const [uploaded, setUploaded] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const { pathname: path } = useLocation();
+  const history = useHistory();
   const path_suffix = path.substring(path.lastIndexOf("/") + 1, path.length);
   const patch_fk = mode === "edit" ? null : path_suffix;
 
@@ -62,6 +67,10 @@ const VersionForm = ({
 
   useEffect(() => {
     fetchMetadataLists();
+
+    if (!userPatches.length) {
+      fetchUserPatches(user.id);
+    }
   }, [fetchMetadataLists]);
 
   useEffect(() => {
@@ -96,20 +105,27 @@ const VersionForm = ({
   };
 
   useEffect(() => {
-    if (uploaded) {
-      if (mode === "edit") {
-        updateVersion({
-          ...formData,
-          release_status: formData.release_status.id,
-          version_id: path_suffix,
-        });
-      } else {
-        createPatchVersion({
-          ...formData,
-          release_status: formData.release_status.id,
-        });
+    async function submit() {
+      if (uploaded) {
+        if (mode === "edit") {
+          console.log("CALLING UPDATE ACTION");
+          await updateVersion({
+            ...formData,
+            release_status: formData.release_status.id,
+            version_fk: path_suffix,
+          });
+        } else {
+          await createPatchVersion({
+            ...formData,
+            release_status: formData.release_status.id,
+          });
+        }
+        setSubmitted(true);
+        console.log("SUBMITTED IS TRUE");
       }
     }
+
+    submit();
   }, [
     uploaded,
     createPatchVersion,
@@ -118,6 +134,16 @@ const VersionForm = ({
     path_suffix,
     updateVersion,
   ]);
+
+  useEffect(() => {
+    if (submitted) {
+      console.log("SUBMITTED USEEFFECT");
+      //   const [patch] = userPatches.filter(
+      //     (patch) => patch.id === Number(formData.patch_fk)
+      //   );
+      //   history.push(`/patches/${patch.name}/${formData.patch_fk}`);
+    }
+  }, [submitted]);
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -201,6 +227,7 @@ const mapStateToProps = (state) => {
     user: state.auth.user,
     b2Response: state.b2.response,
     fileList: state.b2.fileList,
+    userPatches: state.patches.userPatches,
   };
 };
 
@@ -210,6 +237,7 @@ export default connect(mapStateToProps, {
   uploadPatch,
   updateVersion,
   addFile,
+  fetchUserPatches,
 })(VersionForm);
 
 const SelectContainer = styled.div`

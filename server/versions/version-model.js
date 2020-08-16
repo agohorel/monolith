@@ -33,7 +33,7 @@ async function createPatchVersion(patchID, patchVersion) {
 
 async function getPatchVersionById(versionID) {
   const [data] = await db("versions as v")
-    .select("*")
+    .select("vf.*", "vs.*")
     .join("version_files as vf", {
       "vf.version_fk": "v.id",
     })
@@ -45,6 +45,8 @@ async function getPatchVersionById(versionID) {
       "v.id": versionID,
     });
 
+  console.log(data);
+
   const result = {
     version: data.version_name,
     status: data.release_status,
@@ -54,7 +56,8 @@ async function getPatchVersionById(versionID) {
     windowsId: data.windows_file_id,
     androidId: data.android_file_id,
     iosId: data.ios_file_id,
-    id: data.version_fk,
+    id: data.id,
+    patch_id: data.version_fk,
   };
 
   return result;

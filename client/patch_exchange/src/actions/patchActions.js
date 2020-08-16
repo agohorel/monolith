@@ -138,7 +138,7 @@ export const updateVersion = (versionData) => async (dispatch) => {
   dispatch({ type: UPDATE_VERSION_LOADING });
   try {
     const res = await axios.put(
-      `http://localhost:5000/api/versions/${versionData.version_id}/`,
+      `http://localhost:5000/api/versions/${versionData.version_fk}/`,
       versionData
     );
     dispatch({ type: UPDATE_VERSION_SUCCESS, payload: res.data });
